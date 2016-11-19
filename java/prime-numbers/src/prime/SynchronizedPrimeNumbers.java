@@ -7,6 +7,10 @@ import java.util.Iterator;
  */
 public class SynchronizedPrimeNumbers implements PrimeNumbers {
 
+    private static final int SKIP_STATE_INITIAL = 0;
+    private static final int SKIP_STATE_CHECK = 1;
+    private static final int SKIP_STATE_COMPLETED = 2;
+
     private final int threadsNumber;
     private final Object lock = new Object();
     private final long[] checkPrimes;
@@ -34,7 +38,9 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
 
             Thread thread = new Thread(() -> {
 
-                long k = 3 + threadIndex - threadsNumber;
+                final int initialValue = 3 + threadIndex;
+                long k = initialValue - threadsNumber;
+                int skipState = SKIP_STATE_INITIAL;
 
                 mainLoop:
                 while (true) {
@@ -44,6 +50,10 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
                         if (primeNumbersCount <= currentPrimeNumbersCount) {
                             return;
                         }
+
+                        if (skipState == SKIP_STATE_INITIAL && threadsNumber <= tail.prime) {
+                            skipState = SKIP_STATE_CHECK;
+                        }
                     }
 
                     PrimeNumberItem current = head;
@@ -51,12 +61,27 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
 
                     while (current != null) {
 
-                        if (k % current.prime == 0) {
+                        final long prime = current.prime;
+
+                        if (skipState == SKIP_STATE_CHECK) {
+                            if (threadsNumber % prime == 0 && initialValue % prime == 0) {
+                                synchronized (lock) {
+                                    checkPrimes[threadIndex] = Long.MAX_VALUE;
+                                }
+                                return;
+                            }
+                        }
+
+                        if (k % prime == 0) {
                             continue mainLoop;
                         }
 
+
                         last = current;
                         current = current.next;
+                    }
+                    if (skipState == SKIP_STATE_CHECK) {
+                        skipState = SKIP_STATE_COMPLETED;
                     }
 
                     tailLoop:

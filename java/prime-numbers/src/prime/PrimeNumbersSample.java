@@ -6,12 +6,13 @@ package prime;
 public class PrimeNumbersSample {
 
     public static void main(String[] args) {
+        int PN = 150;
 
         printPrimeNumbers("sequential", new SequentialPrimeNumbers().findPrimeNumbers(PN));
-        printPrimeNumbers("synchronized" , new SynchronizedPrimeNumbers().findPrimeNumbers(PN));
+        printPrimeNumbers("synchronized", new SynchronizedPrimeNumbers().findPrimeNumbers(PN));
     }
 
-    private static void printPrimeNumbers(String name, Iterable<Long> primeNumbers){
+    private static void printPrimeNumbers(String name, Iterable<Long> primeNumbers) {
         System.out.printf("%s%n", name);
         int n = 1;
         for (long prime : primeNumbers) {
