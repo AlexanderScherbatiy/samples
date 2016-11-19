@@ -34,7 +34,7 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
 
             Thread thread = new Thread(() -> {
 
-                long k = 2 + threadIndex + 1 - threadsNumber;
+                long k = 3 + threadIndex - threadsNumber;
 
                 mainLoop:
                 while (true) {
@@ -70,6 +70,10 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
                         }
 
                         synchronized (lock) {
+                            if (primeNumbersCount <= currentPrimeNumbersCount) {
+                                return;
+                            }
+
                             for (int j = 0; j < threadsNumber; j++) {
                                 if (checkPrimes[j] < k) {
                                     continue tailLoop;
@@ -118,7 +122,7 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
     }
 
 
-    public static class PrimeNumberItem {
+    private static class PrimeNumberItem {
         private final long prime;
         private volatile PrimeNumberItem next;
 

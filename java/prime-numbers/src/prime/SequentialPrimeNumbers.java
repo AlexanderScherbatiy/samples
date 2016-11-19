@@ -50,7 +50,7 @@ public class SequentialPrimeNumbers implements PrimeNumbers {
                 };
     }
 
-    public static class PrimeNumberItem {
+    private static class PrimeNumberItem {
         private final long prime;
         private PrimeNumberItem next;
 
