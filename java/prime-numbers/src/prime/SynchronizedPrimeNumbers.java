@@ -1,6 +1,7 @@
 package prime;
 
 import java.util.Iterator;
+
 import static java.lang.Long.MAX_VALUE;
 
 /**
@@ -104,6 +105,7 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
                         current = current.next;
                     }
 
+                    int j = 0;
                     tailLoop:
                     while (true) {
 
@@ -119,7 +121,7 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
                                 continue mainLoop;
                             }
 
-                            for (int j = 0; j < threadsNumber; j++) {
+                            for (; j < threadsNumber; j++) {
                                 if (currentNumbers[j] < k) {
                                     waitNumbers[j] = Math.min(k, waitNumbers[j]);
                                     try {
