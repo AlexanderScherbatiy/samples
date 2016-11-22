@@ -6,10 +6,12 @@ package prime;
 public class PrimeNumbersSample {
 
     public static void main(String[] args) {
-        int PN = 150;
+        int primeNumbersCount = 150;
+        int threadsNumber = 8;
 
-        printPrimeNumbers("sequential", new SequentialPrimeNumbers().findPrimeNumbers(PN));
-        printPrimeNumbers("synchronized", new SynchronizedPrimeNumbers().findPrimeNumbers(PN));
+        printPrimeNumbers("sequential", new SequentialPrimeNumbers().findPrimeNumbers(primeNumbersCount));
+        printPrimeNumbers("synchronized", new SynchronizedPrimeNumbers(threadsNumber).findPrimeNumbers(primeNumbersCount));
+        printPrimeNumbers("predefined", new PredefinedSynchronizedPrimeNumbers(threadsNumber).findPrimeNumbers(primeNumbersCount));
     }
 
     private static void printPrimeNumbers(String name, Iterable<Long> primeNumbers) {

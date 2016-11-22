@@ -10,19 +10,21 @@ public class PrimerNumbersTest {
     }
 
     private static void calculatePrimeNumbersTime() {
-        int primeNumbersCount = 20000;
+        int primeNumbersCount = 25000;
+        int threadsNumber = 8;
 
         System.out.printf("Find first %d prime numbers%n", primeNumbersCount);
+        testPrimes("sequential", new SequentialPrimeNumbers(), primeNumbersCount);
+        testPrimes("sequential", new SynchronizedPrimeNumbers(threadsNumber), primeNumbersCount);
+        testPrimes("predefined", new PredefinedSynchronizedPrimeNumbers(threadsNumber), primeNumbersCount);
+    }
+
+    private static void testPrimes(String msg, PrimeNumbers primeNumbers, int count) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        new SequentialPrimeNumbers().findPrimeNumbers(primeNumbersCount);
+        primeNumbers.findPrimeNumbers(count);
         stopWatch.stop();
-        System.out.printf("[sequential] elapsed time: %f seconds%n", stopWatch.getElapsedTimeSeconds());
-
-        stopWatch.start();
-        new SynchronizedPrimeNumbers(11).findPrimeNumbers(primeNumbersCount);
-        stopWatch.stop();
-        System.out.printf("[sequential] elapsed time: %f seconds%n", stopWatch.getElapsedTimeSeconds());
+        System.out.printf("[%s] elapsed time: %f seconds%n", msg, stopWatch.getElapsedTimeSeconds());
     }
 
     private static class StopWatch {

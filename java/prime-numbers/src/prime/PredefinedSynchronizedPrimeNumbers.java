@@ -7,11 +7,7 @@ import static java.lang.Long.MAX_VALUE;
 /**
  * Created by alexsch on 11/18/2016.
  */
-public class SynchronizedPrimeNumbers implements PrimeNumbers {
-
-    private static final int SKIP_STATE_INITIAL = 0;
-    private static final int SKIP_STATE_CHECK = 1;
-    private static final int SKIP_STATE_COMPLETED = 2;
+public class PredefinedSynchronizedPrimeNumbers implements PrimeNumbers {
 
     private final Object lock = new Object();
     private final int threadsNumber;
@@ -21,11 +17,11 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
     private PrimeNumberItem tail = head;
     private long currentPrimeNumbersCount = 1;
 
-    public SynchronizedPrimeNumbers() {
+    public PredefinedSynchronizedPrimeNumbers() {
         this(Runtime.getRuntime().availableProcessors());
     }
 
-    public SynchronizedPrimeNumbers(int threadsNumber) {
+    public PredefinedSynchronizedPrimeNumbers(int threadsNumber) {
         synchronized (lock) {
             this.threadsNumber = threadsNumber;
             this.currentNumbers = new long[threadsNumber];
@@ -37,19 +33,84 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
     }
 
     @Override
-    public Iterable<Long> findPrimeNumbers(final long primeNumbersCount) {
+    public Iterable<Long> findPrimeNumbers(long primeNumbersCount) {
+
+        findPredefinedPrimeNumbers(primeNumbersCount);
+        return () ->
+                new Iterator<Long>() {
+
+                    PrimeNumberItem item = head;
+
+                    @Override
+                    public boolean hasNext() {
+                        return item != null;
+                    }
+
+                    @Override
+                    public Long next() {
+                        long prime = item.prime;
+                        item = item.next;
+                        return prime;
+                    }
+                };
+
+    }
+
+    public void findPredefinedPrimeNumbers(long primeNumbersCount) {
+
+        long n = 2;
+        long predefinedNumbersCount = (threadsNumber == 1)
+                ? primeNumbersCount
+                : Math.min(primeNumbersCount, threadsNumber);
+
+        boolean sequential = (predefinedNumbersCount == primeNumbersCount);
+
+        boolean[] skipThread = new boolean[threadsNumber];
+
+        mainLoop:
+        while (currentPrimeNumbersCount < predefinedNumbersCount) {
+            n++;
+            PrimeNumberItem current = head;
+            while (current != null) {
+                if (n % current.prime == 0) {
+                    continue mainLoop;
+                }
+                current = current.next;
+            }
+
+            tail.next = new PrimeNumberItem(n);
+            tail = tail.next;
+            currentPrimeNumbersCount++;
+
+            if (!sequential && threadsNumber % n == 0) {
+                for (int i = 0; i < threadsNumber; i++) {
+                    if (!skipThread[i] && ((3 + i) % n == 0)) {
+                        skipThread[i] = true;
+                        synchronized (lock) {
+                            currentNumbers[i] = MAX_VALUE;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (sequential) {
+            return;
+        }
 
         final Thread[] threads = new Thread[threadsNumber];
 
         for (int i = 0; i < threadsNumber; i++) {
 
+            if (skipThread[i]) {
+                continue;
+            }
+
             final int threadIndex = i;
 
             Thread thread = new Thread(() -> {
 
-                final int initialValue = 3 + threadIndex;
-                long k = initialValue - threadsNumber;
-                int skipState = SKIP_STATE_INITIAL;
+                long k = 3 + threadIndex;
 
                 mainLoop:
                 while (true) {
@@ -70,14 +131,6 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
                             waitNumbers[threadIndex] = MAX_VALUE;
                             lock.notifyAll();
                         }
-
-                        if (skipState == SKIP_STATE_COMPLETED) {
-                            // nop
-                        } else if (skipState == SKIP_STATE_CHECK) {
-                            skipState = SKIP_STATE_COMPLETED;
-                        } else if (skipState == SKIP_STATE_INITIAL && threadsNumber <= tail.prime) {
-                            skipState = SKIP_STATE_CHECK;
-                        }
                     }
 
                     PrimeNumberItem current = head;
@@ -86,18 +139,6 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
                     while (current != null) {
 
                         final long prime = current.prime;
-
-                        if (skipState == SKIP_STATE_CHECK) {
-                            if (threadsNumber % prime == 0 && initialValue % prime == 0) {
-                                synchronized (lock) {
-                                    currentNumbers[threadIndex] = MAX_VALUE;
-                                    if (waitNumbers[threadIndex] != MAX_VALUE) {
-                                        lock.notifyAll();
-                                    }
-                                    return;
-                                }
-                            }
-                        }
 
                         if (k % prime == 0) {
                             continue mainLoop;
@@ -120,7 +161,11 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
 
                         synchronized (lock) {
                             if (primeNumbersCount <= currentPrimeNumbersCount) {
-                                continue mainLoop;
+                                currentNumbers[threadIndex] = MAX_VALUE;
+                                if (waitNumbers[threadIndex] != MAX_VALUE) {
+                                    lock.notifyAll();
+                                }
+                                return;
                             }
 
                             for (; j < threadsNumber; j++) {
@@ -150,33 +195,15 @@ public class SynchronizedPrimeNumbers implements PrimeNumbers {
         }
 
         try {
-            for (Thread thread : threads) {
-                thread.join();
+            for (int i = 0; i < threadsNumber; i++) {
+                if (threads[i] != null) {
+                    threads[i].join();
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
-
-        return () ->
-                new Iterator<Long>() {
-
-                    PrimeNumberItem item = head;
-
-                    @Override
-                    public boolean hasNext() {
-                        return item != null;
-                    }
-
-                    @Override
-                    public Long next() {
-                        long prime = item.prime;
-                        item = item.next;
-                        return prime;
-                    }
-                };
     }
-
 
     private static class PrimeNumberItem {
         private final long prime;
