@@ -1,5 +1,7 @@
 package patterns;
 
+import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -8,6 +10,12 @@ import java.util.regex.Pattern;
 public class PatternSamples {
 
     public static void main(String[] args) {
+        checkMatches();
+        checkSplit();
+        checkFind();
+    }
+
+    static void checkMatches() {
 
         Pattern pattern = Pattern.compile("a");
         matchTrue(pattern, "a");
@@ -66,6 +74,13 @@ public class PatternSamples {
         matchFalse(pattern, "abbcce");
         matchFalse(pattern, "abcd");
 
+        pattern = Pattern.compile("ab{2}c");
+        matchFalse(pattern, "ac");
+        matchFalse(pattern, "abc");
+        matchTrue(pattern, "abbc");
+        matchFalse(pattern, "abbbc");
+        matchFalse(pattern, "abbbbc");
+
         pattern = Pattern.compile("ab{2,3}c");
         matchFalse(pattern, "ac");
         matchFalse(pattern, "abc");
@@ -79,13 +94,45 @@ public class PatternSamples {
         matchFalse(pattern, "ac");
     }
 
+    static void checkSplit() {
+        Pattern pattern = Pattern.compile(":|;");
+        String[] splitText = pattern.split("a:b;cc");
+
+        assertEquals(splitText.length, 3);
+        assertEquals(splitText[0], "a");
+        assertEquals(splitText[1], "b");
+        assertEquals(splitText[2], "cc");
+    }
+
+    static void checkFind() {
+        Pattern pattern = Pattern.compile("s+");
+        Matcher matcher = pattern.matcher("asbbsscccsssdddd");
+
+        StringBuffer buffer = new StringBuffer();
+
+        while (matcher.find()) {
+            matcher.appendReplacement(buffer, "-");
+        }
+        matcher.appendTail(buffer);
+
+        assertEquals(buffer.toString(), "a-bb-ccc-dddd");
+    }
+
     private static void matchTrue(Pattern pattern, String str) {
         if (!pattern.matcher(str).matches()) {
+            throw new RuntimeException(String.format("Pattern '%s' does not match string '%s'", pattern, str));
         }
     }
 
     private static void matchFalse(Pattern pattern, String str) {
         if (pattern.matcher(str).matches()) {
+            throw new RuntimeException(String.format("Pattern '%s' matches string '%s'", pattern, str));
+        }
+    }
+
+    private static void assertEquals(Object obj1, Object obj2) {
+        if (!Objects.equals(obj1, obj2)) {
+            throw new RuntimeException(String.format("Object %s does not equal to %s", obj1, obj2));
         }
     }
 }
