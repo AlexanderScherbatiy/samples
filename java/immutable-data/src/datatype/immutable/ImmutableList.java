@@ -17,14 +17,7 @@ public final class ImmutableList<E> {
     }
 
     public static <T, R> ImmutableList<R> map(ImmutableList<T> list, Function<T, R> mapper) {
-        ImmutableList<R> resultList = null;
-
-        while (list != null) {
-            resultList = new ImmutableList<R>(mapper.apply(list.head), resultList);
-            list = list.tail;
-        }
-
-        return resultList;
+        return list == null ? null : new ImmutableList<R>(mapper.apply(list.head), map(list.tail, mapper));
     }
 
     public static <T> ImmutableList<T> listOf(T... elements) {
