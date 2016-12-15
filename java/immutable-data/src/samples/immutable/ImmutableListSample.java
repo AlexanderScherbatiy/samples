@@ -14,6 +14,7 @@ public class ImmutableListSample {
     public static void main(String[] args) {
         printSample();
         mapSample();
+        filterSample();
     }
 
     private static void printSample() {
@@ -23,8 +24,14 @@ public class ImmutableListSample {
 
     private static void mapSample() {
         ImmutableList<Integer> numbers = listOf(1, 2, 3, 4, 5);
-        ImmutableList<Integer> squares = map(numbers, (x) -> x * x);
+        ImmutableList<Integer> squares = numbers.map((x) -> x * x);
         System.out.printf("map %s to squares %s\n", toString(numbers), toString(squares));
+    }
+
+    private static void filterSample() {
+        ImmutableList<String> animals = listOf("cat", "dog", "mouse");
+        ImmutableList<String> animalsExceptDog = animals.filter(elem -> !"dog".equals(elem));
+        System.out.printf("animals: %s except dog: %s\n", toString(animals), toString(animalsExceptDog));
     }
 
     private static <T> String toString(ImmutableList<T> list) {
