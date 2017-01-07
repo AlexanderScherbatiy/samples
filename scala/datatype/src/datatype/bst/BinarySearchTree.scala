@@ -14,15 +14,22 @@ sealed abstract class BinarySearchTree[A <% Ordered[A]] {
       else this
   }
 
-  override def toString: String = this match {
-    case EmptyBinarySearchTree() => ""
-    case NonEmptyBinarySeacrhTree(v, left, right) => s"($v $left $right)"
-  }
-
-
   def map[B <% Ordered[B]](f: A => B): BinarySearchTree[B] = this match {
     case EmptyBinarySearchTree() => new EmptyBinarySearchTree[B]
     case NonEmptyBinarySeacrhTree(v, left, right) => new NonEmptyBinarySeacrhTree[B](f(v), left.map(f), right.map(f))
+  }
+
+  def foreach(f: A => Unit): Unit = this match {
+    case EmptyBinarySearchTree() =>
+    case NonEmptyBinarySeacrhTree(v, left, right) =>
+      left.foreach(f)
+      f(v)
+      right.foreach(f)
+  }
+
+  override def toString: String = this match {
+    case EmptyBinarySearchTree() => ""
+    case NonEmptyBinarySeacrhTree(v, left, right) => s"($v $left $right)"
   }
 }
 
