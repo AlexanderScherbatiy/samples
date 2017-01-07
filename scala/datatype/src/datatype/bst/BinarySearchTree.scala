@@ -4,34 +4,38 @@ package datatype.bst
   * Created by alexsch.
   */
 
-sealed abstract class BinarySearchTree[T <% Ordered[T]] {
+sealed abstract class BinarySearchTree[A <% Ordered[A]] {
 
-  def insert(value: T): BinarySearchTree[T] = this match {
-    case EmptyBinarySearchTree() => new NonEmptyBinarySeacrhTree[T](value, new EmptyBinarySearchTree(), new EmptyBinarySearchTree())
+  def insert(value: A): BinarySearchTree[A] = this match {
+    case EmptyBinarySearchTree() => new NonEmptyBinarySeacrhTree[A](value, new EmptyBinarySearchTree(), new EmptyBinarySearchTree())
     case NonEmptyBinarySeacrhTree(v, left, right) =>
       if (value < v) new NonEmptyBinarySeacrhTree(v, left.insert(value), right)
       else if (value > v) new NonEmptyBinarySeacrhTree(v, left, right.insert(value))
       else this
   }
 
-
   override def toString: String = this match {
     case EmptyBinarySearchTree() => ""
     case NonEmptyBinarySeacrhTree(v, left, right) => s"($v $left $right)"
   }
-}
 
 
-object BinarySearchTree extends BinarySearchTree[Nothing] {
-
-  def apply[T <% Ordered[T]](values: T*): BinarySearchTree[T] = {
-    values.foldLeft[BinarySearchTree[T]](new EmptyBinarySearchTree[T]())((t, value) => t.insert(value))
+  def map[B <% Ordered[B]](f: A => B): BinarySearchTree[B] = this match {
+    case EmptyBinarySearchTree() => new EmptyBinarySearchTree[B]
+    case NonEmptyBinarySeacrhTree(v, left, right) => new NonEmptyBinarySeacrhTree[B](f(v), left.map(f), right.map(f))
   }
 }
 
-case class EmptyBinarySearchTree[T <% Ordered[T]]() extends BinarySearchTree[T] {
+object BinarySearchTree {
+
+  def apply[A <% Ordered[A]](values: A*): BinarySearchTree[A] = {
+    values.foldLeft[BinarySearchTree[A]](new EmptyBinarySearchTree[A]())((t, value) => t.insert(value))
+  }
 }
 
-case class NonEmptyBinarySeacrhTree[T <% Ordered[T]](value: T, left: BinarySearchTree[T], right: BinarySearchTree[T])
-  extends BinarySearchTree[T] {
+case class EmptyBinarySearchTree[A <% Ordered[A]]() extends BinarySearchTree[A] {
+}
+
+case class NonEmptyBinarySeacrhTree[A <% Ordered[A]](value: A, left: BinarySearchTree[A], right: BinarySearchTree[A])
+  extends BinarySearchTree[A] {
 }
