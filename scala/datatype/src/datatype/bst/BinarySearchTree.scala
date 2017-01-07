@@ -27,6 +27,22 @@ sealed abstract class BinarySearchTree[A <% Ordered[A]] {
       right.foreach(f)
   }
 
+  def filter(p: A => Boolean): BinarySearchTree[A] = {
+
+    def merge(left: BinarySearchTree[A], right: BinarySearchTree[A]): BinarySearchTree[A] = left match {
+      case EmptyBinarySearchTree() => right
+      case NonEmptyBinarySeacrhTree(v, l, r) => new NonEmptyBinarySeacrhTree[A](v, l, merge(r, right))
+    }
+
+    this match {
+      case EmptyBinarySearchTree() => new EmptyBinarySearchTree[A]()
+      case NonEmptyBinarySeacrhTree(v, left, right) =>
+        if (p(v)) new NonEmptyBinarySeacrhTree[A](v, left.filter(p), right.filter(p))
+        else merge(left.filter(p), right.filter(p))
+    }
+  }
+
+
   override def toString: String = this match {
     case EmptyBinarySearchTree() => ""
     case NonEmptyBinarySeacrhTree(v, left, right) => s"($v $left $right)"

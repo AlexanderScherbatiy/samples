@@ -7,7 +7,7 @@ import datatype.bst.BinarySearchTree
   */
 object BinarySearchTreeSample extends App {
 
-  val tree = BinarySearchTree(2, 1, 4, 3, 5)
+  val tree = BinarySearchTree(-1, 3, 1, -2, 2, 0, -3)
   println(s"tree: $tree")
 
   for (value <- tree) {
@@ -17,7 +17,11 @@ object BinarySearchTreeSample extends App {
   val twiceTree = tree.map(x => 2 * x)
   println(s"twice tree: $twiceTree")
 
-  val squareTree = for (value <- tree) yield value * value
+  val evenTree = tree.filter(x => x % 2 == 0)
+  println(s"even tree: $evenTree")
+
+  val squareTree = for (value <- tree if value >= 0) yield value * value
   println(s"square tree: $squareTree")
+
 
 }
