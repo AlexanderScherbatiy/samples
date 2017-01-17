@@ -8,15 +8,15 @@ import java.util.Comparator;
 public abstract class AbstractSort implements Sort {
 
 
-    <T> boolean less(T a, T b, Comparator<T> comparator) {
+    protected <T> boolean less(T a, T b, Comparator<T> comparator) {
         return comparator.compare(a, b) < 0;
     }
 
-    <T> boolean less(int i, int j, T[] elems, Comparator<T> comparator) {
-        return less(elems[i], elems[j], comparator);
+    protected <T> boolean greater(T a, T b, Comparator<T> comparator) {
+        return comparator.compare(a, b) > 0;
     }
 
-    <T> void swap(int i, int j, T[] elems) {
+    protected <T> void swap(int i, int j, T[] elems) {
         T elem = elems[i];
         elems[i] = elems[j];
         elems[j] = elem;

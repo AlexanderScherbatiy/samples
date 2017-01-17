@@ -6,6 +6,7 @@ import java.util.Comparator;
  * Created by alexsch.
  */
 public class BubbleSort extends AbstractSort {
+
     @Override
     public <T> void sort(T[] elems, Comparator<T> comparator) {
 
@@ -17,5 +18,9 @@ public class BubbleSort extends AbstractSort {
                 }
             }
         }
+    }
+
+    private <T> boolean less(int i, int j, T[] elems, Comparator<T> comparator) {
+        return less(elems[i], elems[j], comparator);
     }
 }
