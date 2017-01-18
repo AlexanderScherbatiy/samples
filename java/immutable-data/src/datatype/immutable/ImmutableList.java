@@ -56,7 +56,7 @@ public final class ImmutableList<E> {
         ImmutableList<T> list = null;
 
         for (int i = elements.length - 1; i >= 0; i--) {
-            list = new ImmutableList<T>(elements[i], list);
+            list = cons(elements[i], list);
         }
         return list;
     }
