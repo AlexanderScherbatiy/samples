@@ -9,7 +9,19 @@ import static datatype.immutable.ImmutableList.*;
  */
 public class ImmutableListTest {
     public static void main(String[] args) {
+
+        testReverse();
         testfilter();
+    }
+
+    static void testReverse() {
+
+        ImmutableList<Integer> list = listOf(1, 2, 3);
+        ImmutableList<Integer> reverse = list.reverse();
+        assertTrue(reverse.head == 3, "Reverse head is not 3!");
+        assertTrue(reverse.tail.head == 2, "Reverse head is not 2!");
+        assertTrue(reverse.tail.tail.head == 1, "Reverse last is not 1!");
+        assertTrue(reverse.tail.tail.tail == null, "Reverse end is not null!");
     }
 
     static void testfilter() {

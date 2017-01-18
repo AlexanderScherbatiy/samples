@@ -17,6 +17,10 @@ public final class ImmutableList<E> {
         this.tail = tail;
     }
 
+    public static <T> ImmutableList<T> cons(T elem, ImmutableList<T> list) {
+        return new ImmutableList<T>(elem, list);
+    }
+
     public <R> ImmutableList<R> map(Function<E, R> mapper) {
         return map(this, mapper);
     }
@@ -28,6 +32,15 @@ public final class ImmutableList<E> {
     public static <T, R> ImmutableList<R> map(ImmutableList<T> list, Function<T, R> mapper) {
         return list == null ? null : new ImmutableList<R>(mapper.apply(list.head), map(list.tail, mapper));
     }
+
+    public ImmutableList<E> reverse() {
+        return reverse(this, null);
+    }
+
+    private static <T> ImmutableList<T> reverse(ImmutableList<T> list, ImmutableList<T> acc) {
+        return list == null ? acc : reverse(list.tail, cons(list.head, acc));
+    }
+
 
     public static <T> ImmutableList<T> filter(ImmutableList<T> list, Predicate<T> predicate) {
         if (list == null) {
