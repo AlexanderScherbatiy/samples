@@ -21,7 +21,18 @@ public class JavaHeapLeak {
         test.run();
     }
 
+    void run() {
         for (int i = 0; i < N; i++) {
             cleanedMap.clear();
+            updateMap();
+        }
+    }
+
+    void updateMap() {
+        int n = random.nextInt(HALF_MAX) + HALF_MAX;
+        int[] arr = new int[n];
+        Arrays.fill(arr, 0, n - 1, n / 2);
+        cleanedMap.put(n, arr);
+        leakedMap.put(n, arr);
     }
 }
