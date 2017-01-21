@@ -7,13 +7,8 @@ import java.util.Comparator;
  */
 public abstract class AbstractSort implements Sort {
 
-
     protected <T> boolean less(T a, T b, Comparator<T> comparator) {
         return comparator.compare(a, b) < 0;
-    }
-
-    protected <T> boolean greater(T a, T b, Comparator<T> comparator) {
-        return comparator.compare(a, b) > 0;
     }
 
     protected <T> void swap(int i, int j, T[] elems) {

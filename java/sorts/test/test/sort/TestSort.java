@@ -4,6 +4,7 @@ package test.sort;
  * Created by alexsch.
  */
 
+import sort.AbstractSort;
 import sort.QuickSort;
 import sort.Sort;
 
@@ -20,7 +21,7 @@ public class TestSort {
                 Integer[] test = Arrays.copyOf(tests[0], tests[0].length);
                 Integer[] golden = tests[1];
                 sort.sort(test);
-                System.out.printf("sort %s -> %s\n", Arrays.toString(tests[0]), Arrays.toString(test));
+                System.out.printf("sort %s -> %s is sorted: %b\n", Arrays.toString(tests[0]), Arrays.toString(test), AbstractSort.isSorted(test));
                 compare(test, golden);
             }
         }
