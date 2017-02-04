@@ -2,8 +2,6 @@ package datatype;
 
 import datatype.tree.BinarySearchTree;
 
-import java.util.stream.Stream;
-
 /**
  * Created by alexsch on 2/3/2017.
  */
@@ -39,14 +37,20 @@ public class BinarySearchTreeTest {
 
     private static void testStream() {
         BinarySearchTree<Integer> tree = new BinarySearchTree<>();
+        tree.insert(5);
+        tree.insert(4);
+        tree.insert(6);
+        tree.insert(2);
+        tree.insert(3);
+        tree.insert(1);
+        tree.insert(8);
         tree.insert(9);
         tree.insert(7);
-        tree.insert(8);
 
         System.out.printf("tree: %s\n", tree);
 
-        tree.stream().forEach((elem) -> {
-            System.out.printf("foreach: %s\n", elem);
+        tree.parallelStream().forEach((elem) -> {
+            System.out.printf("foreach: %d\n", elem);
         });
     }
 }
