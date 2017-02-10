@@ -1,7 +1,7 @@
 package sample.datatype
 
-import datatype.bst.datatype.stack.EmptyStack
-import datatype.bst.datatype.stack.Stack
+import datatype.stack.EmptyStack
+import datatype.stack.{EmptyStack, Stack}
 
 /**
   * Created by alexsch.

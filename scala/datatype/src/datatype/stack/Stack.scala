@@ -1,4 +1,4 @@
-package datatype.bst.datatype.stack
+package datatype.stack
 
 /**
   * Created by alexsch.
