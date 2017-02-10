@@ -7,7 +7,6 @@ import singleton.DoubleCheckedLockingSingleton;
 import singleton.SynchronizedMethodSingleton;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
@@ -18,23 +17,23 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 public class SingletonBenchmark {
 
     @Benchmark
-    public void synchronizedMethodSingletonBenchmark() throws InterruptedException {
-        SynchronizedMethodSingleton.getInstance();
+    public Object synchronizedMethodSingletonBenchmark() throws InterruptedException {
+        return SynchronizedMethodSingleton.getInstance();
     }
 
     @Benchmark
-    public void doubleCheckedLockingSingletonBenchmark() throws InterruptedException {
-        DoubleCheckedLockingSingleton.getInstance();
+    public Object doubleCheckedLockingSingletonBenchmark() throws InterruptedException {
+        return DoubleCheckedLockingSingleton.getInstance();
     }
 
     @Benchmark
-    public void holderSingletonBenchmark() throws InterruptedException {
-        HolderSingleton.getInstance();
+    public Object holderSingletonBenchmark() throws InterruptedException {
+        return HolderSingleton.getInstance();
     }
 
     @Benchmark
-    public void atomicSingletonBenchmark() throws InterruptedException {
-        AtomicSingleton.getInstance();
+    public Object atomicSingletonBenchmark() throws InterruptedException {
+        return AtomicSingleton.getInstance();
     }
 
     private static void checkSingleton() {
@@ -69,6 +68,7 @@ public class SingletonBenchmark {
         Options opt = new OptionsBuilder()
                 .include(SingletonBenchmark.class.getSimpleName())
                 .forks(1)
+                .threads(4)
                 .build();
 
         new Runner(opt).run();
