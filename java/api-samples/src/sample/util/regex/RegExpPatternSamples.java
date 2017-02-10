@@ -1,4 +1,4 @@
-package patterns;
+package sample.util.regex;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * Created by alexsch on 12/9/2016.
  */
-public class PatternSamples {
+public class RegExpPatternSamples {
 
     public static void main(String[] args) {
         checkMatches();
