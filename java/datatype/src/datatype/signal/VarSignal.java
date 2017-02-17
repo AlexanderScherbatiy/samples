@@ -10,10 +10,10 @@ public class VarSignal<E> extends AbstractSignal<E> {
     public VarSignal(E value) {
         super(false);
         this.value = value;
-        setValue(value);
+        set(value);
     }
 
-    public final void setValue(E value) {
+    public final void set(E value) {
         this.value = value;
         evaluate();
     }
