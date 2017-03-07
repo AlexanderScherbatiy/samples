@@ -10,12 +10,27 @@ import java.util.concurrent.CountDownLatch;
 public class CircularBufferTest {
 
     public static void main(String[] args) throws Exception {
-        testBuffer(new CircularBufferIntrinsicLock<Integer>(8));
+        testSequential(new CircularBufferIntrinsicLock<>(8));
+        testSequential(new CircularBufferAtomicArray<>(8));
+        testTwoThreads(new CircularBufferIntrinsicLock<Integer>(8));
+        testTwoThreads(new CircularBufferAtomicArray<>(8));
     }
 
-    static void testBuffer(final CircularBuffer<Integer> buff) throws Exception {
+    static void testSequential(CircularBuffer<Integer> buff) {
 
+        int N = 100;
+        for (int i = 0; i < N; i++) {
+            assertTrue(buff.isEmpty(), "Buffer is not empty!");
+            buff.put(i);
+            assertTrue(!buff.isFull(), "Buffer is not full!");
+            int elem = buff.take();
+            assertTrue(elem == i, String.format(
+                    "Take elem is %d instead of %d", elem, i));
+        }
+    }
 
+    static void testTwoThreads(final CircularBuffer<Integer> buff) throws Exception {
+        
         final CountDownLatch latch = new CountDownLatch(1);
 
         Random rand = new Random();
@@ -66,4 +81,9 @@ public class CircularBufferTest {
         }
     }
 
+    private static void assertTrue(boolean condition, String message) {
+        if (!condition) {
+            throw new RuntimeException(message);
+        }
+    }
 }
