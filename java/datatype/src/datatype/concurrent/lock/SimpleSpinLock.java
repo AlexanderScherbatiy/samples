@@ -13,7 +13,8 @@ public class SimpleSpinLock implements SimpleLock {
     public void lock() {
 
         while (true) {
-            if (!lock.get()) {
+
+            while (lock.get()) {
                 // busy wait
             }
 
