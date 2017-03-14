@@ -2,6 +2,7 @@ package datatype.concurrent.lock;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Created by alexsch on 3/12/2017.
@@ -12,9 +13,13 @@ public class SimpleMutexTest {
 
     public static void main(String[] args) throws Exception {
 
+        test(new MutexCounter());
+        test(new SpinCounter());
+    }
+
+    private static void test(final Counter counter) throws Exception {
         final int N = 1000;
         final int steps = 20000;
-        final Counter counter = new Counter();
         final int[] counts = new int[N];
         final CountDownLatch start = new CountDownLatch(1);
         final CountDownLatch finish = new CountDownLatch(N);
@@ -63,18 +68,39 @@ public class SimpleMutexTest {
         }
     }
 
-    private static class Counter {
+    private interface Counter {
+        int getNextCount();
+    }
 
-        final SimpleMutex mutex = new SimpleMutex();
+    private static abstract class AbstractCounter implements Counter {
+
+        final SimpleLock lock;
         private int count = 0;
 
-        int getNextCount() {
-            mutex.lock();
+        public AbstractCounter(SimpleLock lock) {
+            this.lock = lock;
+        }
+
+        @Override
+        public int getNextCount() {
+            lock.lock();
             try {
                 return count++;
             } finally {
-                mutex.unlock();
+                lock.unlock();
             }
+        }
+    }
+
+    private static class MutexCounter extends AbstractCounter {
+        public MutexCounter() {
+            super(new SimpleMutex());
+        }
+    }
+
+    private static class SpinCounter extends AbstractCounter {
+        public SpinCounter() {
+            super(new SimpleSpinLock());
         }
     }
 }

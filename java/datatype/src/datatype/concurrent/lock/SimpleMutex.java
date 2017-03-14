@@ -8,7 +8,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * Created by alexsch on 3/12/2017.
  */
-public class SimpleMutex implements Lock {
+public class SimpleMutex implements Lock, SimpleLock {
 
     private final Sync sync = new Sync();
 
