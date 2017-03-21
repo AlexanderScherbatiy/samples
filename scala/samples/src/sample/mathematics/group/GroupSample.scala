@@ -19,14 +19,18 @@ object GroupSample {
   def printInfo(group: AbstractGroup): Unit = {
 
     println(s"Group: ${group.name}")
-    println(s"Group order: ${group.order}")
+    println(s"order: ${group.order}")
+    val e = group.identity
+
+    println(s"identity: $e, is identity: ${e.isIdentity()}")
 
     val elements = group.elements
 
     println()
     println("elements:")
     for (elem <- elements) {
-      println(s"elem: $elem, inverse: ${elem.inverse()}")
+
+      println(s"elem: $elem, inverse: ${elem.inverse()}, cyclic group: ${elem.cyclicGroup()}")
     }
     println()
 

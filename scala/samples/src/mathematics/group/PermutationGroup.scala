@@ -20,6 +20,8 @@ class PermutationGroup(n: Int) extends AbstractGroup {
 
   override val order: Int = elements.size
 
+  override val identity = new Permutation((0 to n - 1).toArray)
+
   def permutations(elems: Array[Int], used: Array[Boolean], k: Int, list: mutable.ListBuffer[Array[Int]]) {
 
     if (k == n) {
@@ -41,6 +43,7 @@ class PermutationGroup(n: Int) extends AbstractGroup {
 
     val elems = seq
 
+    override def isIdentity() = elems.indices.forall(i => elems(i) == i)
 
     override def inverse() = {
       val inverse = Array.ofDim[Int](n)
@@ -58,6 +61,8 @@ class PermutationGroup(n: Int) extends AbstractGroup {
       }
       new Permutation(result)
     }
+
+    override def toGroupElement = this
 
     override def toString: String = elems.map(e => e + 1).mkString("[", " ", "]")
   }

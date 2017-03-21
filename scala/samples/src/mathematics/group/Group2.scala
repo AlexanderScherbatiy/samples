@@ -7,13 +7,17 @@ object Group2 extends AbstractGroup {
 
   override type GroupElement = Group2Element
 
-  override def name = "Z2"
+  override val name = "Z2"
 
-  override def order = 2
+  override val order = 2
 
-  override def elements = List(E, G)
+  override val identity = E
+
+  override val elements = List(E, G)
 
   object E extends Group2Element {
+
+    override def isIdentity() = true
 
     override def inverse() = E
 
@@ -23,6 +27,8 @@ object Group2 extends AbstractGroup {
   }
 
   object G extends Group2Element {
+
+    override def isIdentity() = false
 
     override def inverse() = G
 
@@ -35,6 +41,7 @@ object Group2 extends AbstractGroup {
   }
 
   abstract class Group2Element extends AbstractGroupElem {
+    override def toGroupElement = this
   }
 
 }
