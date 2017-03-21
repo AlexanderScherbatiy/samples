@@ -8,8 +8,8 @@ import scala.collection.mutable
 class PermutationGroup(n: Int) extends AbstractGroup {
   override type GroupElement = Permutation
 
-
-  override val elements: Iterable[Permutation] = {
+  override val name = s"Permutation($n)"
+  override val elements: Iterable[GroupElement] = {
 
     val values = Array.ofDim[Int](n);
     val used = Array.ofDim[Boolean](n);
@@ -41,6 +41,15 @@ class PermutationGroup(n: Int) extends AbstractGroup {
 
     val elems = seq
 
+
+    override def inverse() = {
+      val inverse = Array.ofDim[Int](n)
+      for (i <- elems.indices) {
+        inverse(elems(i)) = i
+      }
+      new Permutation(inverse)
+    }
+
     override def *(that: Permutation): Permutation = {
 
       val result = Array.ofDim[Int](n)
@@ -50,7 +59,7 @@ class PermutationGroup(n: Int) extends AbstractGroup {
       new Permutation(result)
     }
 
-    override def toString: String = elems.map(e => e + 1).mkString("[", " ", "] ")
+    override def toString: String = elems.map(e => e + 1).mkString("[", " ", "]")
   }
 
 }
