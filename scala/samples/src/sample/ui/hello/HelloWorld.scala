@@ -6,6 +6,7 @@ package sample.ui.hello
 
 import scala.swing._
 import scala.swing.event.ButtonClicked
+import java.awt.Color
 
 object HelloWorld extends SimpleSwingApplication {
 
@@ -15,6 +16,13 @@ object HelloWorld extends SimpleSwingApplication {
 
     contents = new BorderPanel {
       val label = new Label("Hello World!")
+      val paint = new Component {
+        override def paintComponent(g: Graphics2D): Unit = {
+          super.paintComponent(g)
+          g.setColor(Color.RED)
+          g.drawOval(0, 0, size.width, size.height)
+        }
+      }
       val button = new Button("Press Me!") {
 
         reactions += {
@@ -24,7 +32,8 @@ object HelloWorld extends SimpleSwingApplication {
         }
       }
 
-      add(label, BorderPanel.Position.Center)
+      add(label, BorderPanel.Position.North)
+      add(paint, BorderPanel.Position.Center)
       add(button, BorderPanel.Position.South)
     }
 
