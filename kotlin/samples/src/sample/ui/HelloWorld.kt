@@ -1,3 +1,5 @@
+package sample.ui
+
 /**
  * Created by alexsch on 3/27/2017.
  */
