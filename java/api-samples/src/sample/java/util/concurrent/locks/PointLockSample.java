@@ -11,8 +11,9 @@ public class PointLockSample {
 
     public static void main(String[] args) throws Exception {
 
-        int STEPS = 100000;
+        int STEPS = 1000000;
         testPoint(new SyncPoint(1, 0), STEPS);
+        testPoint(new ReadWriteLockPoint(1, 0), STEPS);
         testPoint(new StampedPoint(1, 0), STEPS);
     }
 
