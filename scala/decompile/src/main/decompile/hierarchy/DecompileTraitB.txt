@@ -1,0 +1,6 @@
+Compiled from "DecompileTraitB.scala"
+public interface hierarchy.DecompileTraitB {
+  public static java.lang.String method$(hierarchy.DecompileTraitB, java.lang.String);
+  public java.lang.String method(java.lang.String);
+  public static void $init$(hierarchy.DecompileTraitB);
+}

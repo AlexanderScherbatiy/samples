@@ -1,0 +1,5 @@
+Compiled from "DecompileClass.scala"
+public class hierarchy.DecompileClass extends hierarchy.DecompileAbstractClass implements hierarchy.DecompileTraitA,hierarchy.DecompileTraitB {
+  public java.lang.String method(java.lang.String);
+  public hierarchy.DecompileClass();
+}

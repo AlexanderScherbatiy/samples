@@ -1,0 +1,5 @@
+Compiled from "DecompileAbstractClass.scala"
+public abstract class hierarchy.DecompileAbstractClass {
+  public abstract java.lang.String method(java.lang.String);
+  public hierarchy.DecompileAbstractClass();
+}
