@@ -1,0 +1,11 @@
+Compiled from "DecompileCaseClass.scala"
+public final class sample.DecompileCaseClass$ extends scala.runtime.AbstractFunction1<java.lang.String, sample.DecompileCaseClass> implements scala.Serializable {
+  public static sample.DecompileCaseClass$ MODULE$;
+  public static {};
+  public final java.lang.String toString();
+  public sample.DecompileCaseClass apply(java.lang.String);
+  public scala.Option<java.lang.String> unapply(sample.DecompileCaseClass);
+  private java.lang.Object readResolve();
+  public java.lang.Object apply(java.lang.Object);
+  private sample.DecompileCaseClass$();
+}

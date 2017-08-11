@@ -1,0 +1,12 @@
+Compiled from "DecompileObject.scala"
+public final class sample.DecompileObject {
+  public static void main(java.lang.String[]);
+  public static java.lang.String methodByName(scala.Function0<java.lang.String>);
+  public static java.lang.String methodByValue(java.lang.String);
+  public static void varFuncByValueField_$eq(scala.Function1<java.lang.Object, java.lang.Object>);
+  public static scala.Function1<java.lang.Object, java.lang.Object> varFuncByValueField();
+  public static scala.Function1<java.lang.Object, java.lang.Object> valFuncByValueField();
+  public static void varField_$eq(int);
+  public static int varField();
+  public static int valField();
+}

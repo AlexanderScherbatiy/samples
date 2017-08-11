@@ -1,0 +1,21 @@
+Compiled from "DecompileTrait.scala"
+public interface sample.DecompileTrait {
+  public abstract void sample$DecompileTrait$_setter_$valField_$eq(int);
+  public abstract void sample$DecompileTrait$_setter_$valFuncByValueField_$eq(scala.Function1<java.lang.Object, java.lang.Object>);
+  public abstract int valField();
+  public abstract int varField();
+  public abstract void varField_$eq(int);
+  public abstract java.lang.String abstractMethodByValue(java.lang.String);
+  public abstract java.lang.String abstractMethodByName(scala.Function0<java.lang.String>);
+  public abstract scala.Function1<java.lang.Object, java.lang.Object> valFuncByValueField();
+  public abstract scala.Function1<java.lang.Object, java.lang.Object> varFuncByValueField();
+  public abstract void varFuncByValueField_$eq(scala.Function1<java.lang.Object, java.lang.Object>);
+  public static java.lang.String methodByValue$(sample.DecompileTrait, java.lang.String);
+  public java.lang.String methodByValue(java.lang.String);
+  public static java.lang.String methodByName$(sample.DecompileTrait, scala.Function0);
+  public java.lang.String methodByName(scala.Function0<java.lang.String>);
+  public static int $anonfun$valFuncByValueField$1(int);
+  public static int $anonfun$varFuncByValueField$1(int);
+  public static void $init$(sample.DecompileTrait);
+  private static java.lang.Object $deserializeLambda$(java.lang.invoke.SerializedLambda);
+}

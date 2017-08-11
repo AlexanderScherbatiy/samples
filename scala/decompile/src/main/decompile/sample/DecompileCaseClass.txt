@@ -1,0 +1,20 @@
+Compiled from "DecompileCaseClass.scala"
+public class sample.DecompileCaseClass implements scala.Product,scala.Serializable {
+  private final java.lang.String value;
+  public static scala.Option<java.lang.String> unapply(sample.DecompileCaseClass);
+  public static sample.DecompileCaseClass apply(java.lang.String);
+  public static <A> scala.Function1<java.lang.String, A> andThen(scala.Function1<sample.DecompileCaseClass, A>);
+  public static <A> scala.Function1<A, sample.DecompileCaseClass> compose(scala.Function1<A, java.lang.String>);
+  public java.lang.String value();
+  public sample.DecompileCaseClass copy(java.lang.String);
+  public java.lang.String copy$default$1();
+  public java.lang.String productPrefix();
+  public int productArity();
+  public java.lang.Object productElement(int);
+  public scala.collection.Iterator<java.lang.Object> productIterator();
+  public boolean canEqual(java.lang.Object);
+  public int hashCode();
+  public java.lang.String toString();
+  public boolean equals(java.lang.Object);
+  public sample.DecompileCaseClass(java.lang.String);
+}

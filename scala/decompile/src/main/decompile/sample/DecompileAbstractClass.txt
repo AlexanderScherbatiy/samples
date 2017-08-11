@@ -1,0 +1,21 @@
+Compiled from "DecompileAbstractClass.scala"
+public abstract class sample.DecompileAbstractClass {
+  private final int valField;
+  private int varField;
+  private final scala.Function1<java.lang.Object, java.lang.Object> valFuncByValueField;
+  private scala.Function1<java.lang.Object, java.lang.Object> varFuncByValueField;
+  public int valField();
+  public int varField();
+  public void varField_$eq(int);
+  public abstract java.lang.String abstractMethodByValue(java.lang.String);
+  public abstract java.lang.String abstractMethodByName(scala.Function0<java.lang.String>);
+  public scala.Function1<java.lang.Object, java.lang.Object> valFuncByValueField();
+  public scala.Function1<java.lang.Object, java.lang.Object> varFuncByValueField();
+  public void varFuncByValueField_$eq(scala.Function1<java.lang.Object, java.lang.Object>);
+  public java.lang.String methodByValue(java.lang.String);
+  public java.lang.String methodByName(scala.Function0<java.lang.String>);
+  public static final int $anonfun$valFuncByValueField$1(int);
+  public static final int $anonfun$varFuncByValueField$1(int);
+  public sample.DecompileAbstractClass();
+  private static java.lang.Object $deserializeLambda$(java.lang.invoke.SerializedLambda);
+}
