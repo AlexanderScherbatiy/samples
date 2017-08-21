@@ -1,0 +1,44 @@
+package sort
+
+import org.scalatest.FunSuite
+import sort.Sort.insertSort
+
+import scala.util.Random
+
+class SortTest extends FunSuite {
+
+  test("Insert Sort empty list") {
+    assert(insertSort(Nil) === Nil)
+  }
+
+  test("Insert Sort 1 element") {
+    assert(insertSort(1 :: Nil) === 1 :: Nil)
+  }
+
+  test("Insert Sort 2 elements") {
+    assert(insertSort(1 :: 2 :: Nil) === 1 :: 2 :: Nil)
+    assert(insertSort(2 :: 1 :: Nil) === 1 :: 2 :: Nil)
+  }
+
+  test("Insert Sort 3 elements") {
+    assert(insertSort(3 :: 2 :: 1 :: Nil) === 1 :: 2 :: 3 :: Nil)
+    assert(insertSort(1 :: 3 :: 2 :: Nil) === 1 :: 2 :: 3 :: Nil)
+  }
+
+  test("Insert Sort N elements") {
+
+    val N = 100
+    val MAX = 1000
+
+    val random = Random
+
+    def randomList(n: Int): List[Int] = {
+      if (n == 0) Nil else random.nextInt(MAX) :: randomList(n - 1)
+    }
+
+    val list = randomList(N)
+    val sortedList = insertSort(list)
+
+    assert(sortedList.zip(sortedList.drop(1)).forall { case (a, b) => a <= b })
+  }
+}
