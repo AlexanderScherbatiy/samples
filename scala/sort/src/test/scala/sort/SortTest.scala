@@ -41,4 +41,10 @@ class SortTest extends FunSuite {
 
     assert(sortedList.zip(sortedList.drop(1)).forall { case (a, b) => a <= b })
   }
+
+  test("Insert Sort strings") {
+    assert(insertSort(List("1", "2", "10", "20")) === List("1", "10", "2", "20"))
+    val N = 9;
+    assert(insertSort((N to 1 by -1).toList.map(_.toString)) === (1 to N).toList.map(_.toString))
+  }
 }

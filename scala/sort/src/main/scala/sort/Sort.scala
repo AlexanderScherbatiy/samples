@@ -2,14 +2,14 @@ package sort
 
 object Sort {
 
-  def insertSort(list: List[Int]) = {
+  def insertSort[A <% Ordered[A]](list: List[A]) = {
 
-    def insert(value: Int, list: List[Int]): List[Int] = list match {
+    def insert(value: A, list: List[A]): List[A] = list match {
       case Nil => value :: Nil
-      case head :: tail => if (value > head) head :: insert(value, tail) else value :: list
+      case head :: tail => if (value <= head) value :: list else head :: insert(value, tail)
     }
 
-    def sort(l: List[Int]): List[Int] = l match {
+    def sort(l: List[A]): List[A] = l match {
       case Nil => Nil
       case head :: tail => insert(head, sort(tail))
     }
