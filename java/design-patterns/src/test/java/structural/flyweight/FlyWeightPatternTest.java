@@ -1,4 +1,4 @@
-package design.flyweight;
+package structural.flyweight;
 
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ public class FlyWeightPatternTest {
     @Test
     public void testBinaryArrayValue() {
 
-        assertArrayEquals(new boolean[]{false}, BinaryArrayFactory.getBinaryArray(0));
+        assertArrayEquals(new boolean[]{}, BinaryArrayFactory.getBinaryArray(0));
         assertArrayEquals(new boolean[]{true}, BinaryArrayFactory.getBinaryArray(1));
 
         assertArrayEquals(new boolean[]{true, false}, BinaryArrayFactory.getBinaryArray(2));

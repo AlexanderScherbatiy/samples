@@ -1,4 +1,4 @@
-package design.flyweight;
+package structural.flyweight;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -21,13 +21,9 @@ public class BinaryArrayFactory {
 
         int s = value;
 
-        if (s == 0) {
-            list.add(false);
-        } else {
-            while (s != 0) {
-                list.add(s % 2 != 0);
-                s = s / 2;
-            }
+        while (s != 0) {
+            list.add(s % 2 != 0);
+            s = s / 2;
         }
 
         int size = list.size();
