@@ -22,8 +22,8 @@ public class BinaryArrayFactory {
         int s = value;
 
         while (s != 0) {
-            list.add(s % 2 != 0);
-            s = s / 2;
+            list.add((s & 0x1) == 1);
+            s = s >> 1;
         }
 
         int size = list.size();
