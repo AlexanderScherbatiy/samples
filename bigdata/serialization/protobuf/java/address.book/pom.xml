@@ -25,7 +25,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>tutorial.Sample</mainClass>
+                            <mainClass>tutorial.AddressBookSample</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -63,6 +63,12 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>3.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
