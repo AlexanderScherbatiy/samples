@@ -1,3 +1,6 @@
+# To run TensorBoard use
+# tensorboard --logdir=./logs
+
 import tensorflow as tf
 import numpy as np
 
@@ -8,11 +11,17 @@ curr_value = tf.placeholder(tf.float32)
 prev_avg = tf.Variable(0.)
 update_avg = alpha * curr_value + (1 - alpha) * prev_avg
 
+val_summary = tf.summary.scalar("value", curr_value)
+avg_summary = tf.summary.scalar("average", update_avg)
+merged_summary = tf.summary.merge_all()
+writer = tf.summary.FileWriter("./logs")
+
 init = tf.global_variables_initializer()
 
 with tf.Session() as sess:
     sess.run(init)
     for i in range(len(raw_data)):
-        curr_avg = sess.run(update_avg, feed_dict={curr_value: raw_data[i]})
+        summary, curr_avg = sess.run([merged_summary, update_avg], feed_dict={curr_value: raw_data[i]})
         sess.run(tf.assign(prev_avg, curr_avg))
         print(raw_data[i], curr_avg)
+        writer.add_summary(summary, i)
