@@ -5,7 +5,7 @@ import tensorflow as tf
 learning_rate = 0.01
 training_epochs = 100
 
-observation_number = 1001
+observation_number = 101
 polynome_degree = 3
 
 
@@ -28,17 +28,15 @@ w_input = np.array([6.0, -20.0, 3.0, 2.0])
 
 x_input = np.linspace(-5, 5, observation_number)
 y_input = polynomial(w_input, x_input)
+y_input += np.random.normal(0, 2.0, y_input.shape)  # Add noise
 
 idx_train, idx_test = shuffle_and_split_indices(observation_number, 0.8)
 
 x_train, x_test = x_input[idx_train], x_input[idx_test]
 y_train, y_test = y_input[idx_train], y_input[idx_test]
 
-plt.scatter(x_input, y_input, s=3, marker='x')
-
-# Add noise
-y_train += np.random.normal(0, 1.0, x_train.shape)
 plt.scatter(x_train, y_train, s=3)
+plt.scatter(x_test, y_test, marker='x')
 
 
 def model(w, X):
