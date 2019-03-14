@@ -48,19 +48,23 @@ def model(w, X):
 
 
 BATCH_SIZE = tf.placeholder(tf.float32)
-X = tf.placeholder(tf.float32)
-Y = tf.placeholder(tf.float32)
+X = tf.placeholder(tf.float32, name='X')
+Y = tf.placeholder(tf.float32, name='Y')
 
 w = tf.Variable(tf.random_normal([polynome_degree + 1]), name='weights')
 Y_pred = model(w, X)
 
 cost = tf.reduce_sum(tf.square(Y_pred - Y)) / (2 * BATCH_SIZE)
-
 train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
+
+tf.summary.scalar("cost", cost)
+merged_summary = tf.summary.merge_all()
 
 with tf.Session() as sess:
     init = tf.global_variables_initializer()
     sess.run(init)
+
+    writer = tf.summary.FileWriter("tensorboard", sess.graph)
 
     train_dict = {X: x_train, Y: y_train, BATCH_SIZE: x_train.size}
     test_dict = {X: x_test, Y: y_test, BATCH_SIZE: x_test.size}
@@ -70,8 +74,10 @@ with tf.Session() as sess:
 
         if epoch % 50 == 0:
             w_val = sess.run(w)
-            cost_val = sess.run(cost, feed_dict=train_dict)
+            cost_val, summary = sess.run([cost, merged_summary], feed_dict=train_dict)
             print("epoch:", epoch, "cost:", cost_val, "learned w:", w_val)
+
+            writer.add_summary(summary, epoch)
 
     w_val = sess.run(w)
     train_cost_val = sess.run(cost, feed_dict=train_dict)

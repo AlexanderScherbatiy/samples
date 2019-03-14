@@ -57,9 +57,14 @@ Y_pred = model(mean_param, sigma_param, ampl_param, background_param, X)
 cost = tf.reduce_sum(tf.square(Y_pred - Y)) / (2 * BATCH_SIZE)
 train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 
+tf.summary.scalar("cost", cost)
+merged_summary = tf.summary.merge_all()
+
 with tf.Session() as sess:
     init = tf.global_variables_initializer()
     sess.run(init)
+
+    writer = tf.summary.FileWriter("tensorboard", sess.graph)
 
     train_dict = {X: x_train, Y: y_train, BATCH_SIZE: x_train.size}
     test_dict = {X: x_test, Y: y_test, BATCH_SIZE: x_test.size}
@@ -69,8 +74,9 @@ with tf.Session() as sess:
 
         if epoch % 50 == 0:
             cost_val_train = sess.run(cost, feed_dict=train_dict)
-            cost_val_test = sess.run(cost, feed_dict=test_dict)
+            cost_val_test, summary = sess.run([cost, merged_summary], feed_dict=test_dict)
             print("epoch:", epoch, "cost train:", cost_val_train, "test:", cost_val_test)
+            writer.add_summary(summary, epoch)
 
     mean_val, sigma_val, ampl_val, background_val = sess.run([mean_param, sigma_param, ampl_param, background_param])
     cost_val_train = sess.run(cost, feed_dict=train_dict)
