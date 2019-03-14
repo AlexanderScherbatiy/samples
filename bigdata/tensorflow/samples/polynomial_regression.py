@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
-learning_rate = 0.01
-training_epochs = 100
+learning_rate = 0.0007
+training_epochs = 10000
 
-observation_number = 101
+observation_number = 1001
 polynome_degree = 3
 
 
@@ -66,10 +66,9 @@ with tf.Session() as sess:
     test_dict = {X: x_test, Y: y_test, BATCH_SIZE: x_test.size}
 
     for epoch in range(training_epochs):
-        for (x, y) in zip(x_train, y_train):
-            sess.run(train_op, feed_dict={X: x, Y: y, BATCH_SIZE: x_train.size})
+        sess.run(train_op, feed_dict=train_dict)
 
-        if epoch % 20 == 0:
+        if epoch % 50 == 0:
             w_val = sess.run(w)
             cost_val = sess.run(cost, feed_dict=train_dict)
             print("epoch:", epoch, "cost:", cost_val, "learned w:", w_val)
@@ -82,7 +81,7 @@ with tf.Session() as sess:
 
 print("real w:", w_input, "learned w:", w_val)
 
-y_learned = polynomial(w_val, x_train)
-plt.scatter(x_train, y_learned, s=3)
+y_learned = polynomial(w_val, x_input)
+plt.scatter(x_input, y_learned, s=3)
 
 plt.show()
