@@ -1,17 +1,20 @@
 from mnist_model import ClassificationModel
 import numpy as np
 from sklearn.cluster import KMeans
+from sklearn import decomposition
 
 
 class SKLearnKMean(ClassificationModel):
 
     def __init__(self):
         self.N = 10
+        self.pca = decomposition.PCA(n_components=390)
         self.kmeans = KMeans(n_clusters=self.N)
         self.class_mapping = np.zeros(self.N)
 
     def train(self, data, labels):
-        self.kmeans.fit(data)
+        self.pca.fit(data)
+        self.kmeans.fit(self.pca.transform(data))
 
         class_map = np.zeros((self.N, self.N))
         for (cls, label) in zip(self.kmeans.labels_, labels):
@@ -31,7 +34,7 @@ class SKLearnKMean(ClassificationModel):
         return score / labels.size
 
     def predict(self, data):
-        predicted_labels = self.kmeans.predict(data)
+        predicted_labels = self.kmeans.predict(self.pca.transform(data))
         prediction = np.zeros(predicted_labels.size)
 
         for i in range(predicted_labels.size):
