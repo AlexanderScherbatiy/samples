@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from mnist_data import load_data_from_keras
 from sklearn_logistic_regression import SKLearnLogisticRegression
 from sklearn_naive_bayes import SKLearnGaussianNB, SKLearnBernoulliNB, SKLearnMultinomialNB
+from sklearn_kmean import SKLearnKMean
 
 x_train, y_train, x_test, y_test = load_data_from_keras()
 # x_train, y_train, x_test, y_test = load_data_from_file("mnist.csv")
@@ -10,6 +11,7 @@ model = SKLearnLogisticRegression()
 # model = SKLearnGaussianNB()
 # model = SKLearnBernoulliNB(0.5)
 # model = SKLearnMultinomialNB(1.0)
+# model = SKLearnKMean()
 
 show_plot = True
 
