@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 
 learning_rate = 0.0002
-training_epochs = 10000
+training_epochs = 500
+batch_size = 1000
 
-observation_number = 10000
+observation_number = 100000
 polynome_degree = 3
 
 
@@ -66,12 +67,19 @@ with tf.Session() as sess:
     writer = tf.summary.FileWriter("tensorboard", sess.graph)
 
     train_dict = {X: x_train, Y: y_train}
-    test_dict = {X: x_test, Y: y_test}
 
     for epoch in range(training_epochs):
-        sess.run(train_op, feed_dict=train_dict)
 
-        if epoch % 200 == 0:
+        for i in range(int(x_train.size / batch_size)):
+            begin = i * batch_size
+            end = begin + batch_size
+            x_batch = x_train[begin: end]
+            y_batch = y_train[begin: end]
+
+            batch_dict = {X: x_batch, Y: y_batch}
+            sess.run(train_op, feed_dict=batch_dict)
+
+        if epoch % 100 == 0:
             w_val = sess.run(w)
             cost_val, summary = sess.run([cost, merged_summary], feed_dict=train_dict)
             print("epoch:", epoch, "cost:", cost_val, "learned w:", w_val)
@@ -80,7 +88,7 @@ with tf.Session() as sess:
 
     w_val = sess.run(w)
     train_cost_val = sess.run(cost, feed_dict=train_dict)
-    test_cost_val = sess.run(cost, feed_dict=test_dict)
+    test_cost_val = sess.run(cost, feed_dict={X: x_test, Y: y_test})
 
     print("train cost:", train_cost_val, 'test cost:', test_cost_val)
 
