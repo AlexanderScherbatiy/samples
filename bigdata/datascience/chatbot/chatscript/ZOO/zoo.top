@@ -7,14 +7,20 @@ concept: ~attitude [like hate]
 topic: ~ZOO keep repeat []
 
 t: Welcome to the Zoo! Which animals do you want to see?
-  a: (~bird) Let's go to see birds!
-  a: (~reptile) Let's go to see reptiles!
+
+  #! I want to see flamingo
+  a: (see ~bird) Birds are so beautiful. Let's go to see them!
+
+  #! I want to see turtle
+  a: (see ~reptile) Good choice. Let's go to see reptiles!
 
 
+#! Do you like pigeon?
 ?: (Do you ~attitude _~bird)
     $animal=_0
     I am a fun of $animal!
 
+#! Do you like turtle?
 ?: (Do you ~attitude _~reptile)
     $animal=_0
     I am afraid of $animal!
