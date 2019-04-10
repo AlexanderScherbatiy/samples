@@ -17,11 +17,11 @@ t: Welcome to the Zoo! Which animals do you want to see?
 
 #! Do you like pigeon?
 ?: (Do you ~attitude _~bird)
-    $animal=_0
+    $animal='_0
     I am a fun of $animal!
 
 #! Do you like turtle?
 ?: (Do you ~attitude _~reptile)
-    $animal=_0
+    $animal='_0
     I am afraid of $animal!
 
