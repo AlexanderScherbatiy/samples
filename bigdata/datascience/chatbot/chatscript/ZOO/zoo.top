@@ -1,6 +1,9 @@
-
 concept: ~reptile MORE [turtle snake]
-concept: ~mammal [lion leopard]
+concept: ~mammal [lion leopard elephant]
+concept: ~animal [~bird ~reptile ~mammal]
+
+concept: ~dangerous_animal [lion snake]
+
 
 concept: ~attitude [like hate]
 
@@ -16,12 +19,31 @@ t: Welcome to the Zoo! Which animals do you want to see?
 
 
 #! Do you like pigeon?
-?: (Do you ~attitude _~bird)
+?: (do you ~attitude _~bird)
     $animal='_0
     I am a fun of $animal!
 
 #! Do you like turtle?
-?: (Do you ~attitude _~reptile)
+?: (do you ~attitude _~reptile)
     $animal='_0
     I am afraid of $animal!
 
+#! What is amusing lion?
+u: (what is amusing _~animal)
+    Just call it ^double_word(_0)!
+
+
+#! Can I feed elephant?
+u: (can I feed _~animal)
+    $animal=_0
+    if (pattern $animal?~dangerous_animal) {
+        No, it is dangerous!
+    } else {
+        Ok.
+    }
+
+
+outputmacro: ^double_word(^word)
+{
+  ^word ^word
+}
