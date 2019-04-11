@@ -42,6 +42,16 @@ u: (can I feed _~animal)
         Ok.
     }
 
+#! How many legs does pigeon have?
+#! How many legs does elephant have?
+u: (leg do _~animal have)
+    $animal=_0
+    if (pattern $animal?~bird) {
+        $animal has 2 legs.
+    } else {
+        $animal has 4 legs.
+    }
+
 
 outputmacro: ^double_word(^word)
 {
