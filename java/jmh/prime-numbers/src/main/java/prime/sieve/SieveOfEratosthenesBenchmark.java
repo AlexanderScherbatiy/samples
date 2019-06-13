@@ -1,6 +1,10 @@
 package prime.sieve;
 
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,5 +22,18 @@ public class SieveOfEratosthenesBenchmark {
     @Benchmark
     public int[] testPrimes() {
         return SieveOfEratosthenes.findPrimes(10_000, sieveSize);
+    }
+
+
+    public static void main(String[] args) throws RunnerException {
+
+        Options opt = new OptionsBuilder()
+
+                .include(SieveOfEratosthenesBenchmark.class.getSimpleName())
+                // Use this to selectively constrain/override parameters
+                .param("sieveSize", "1000", "10000", "100000")
+                .build();
+
+        new Runner(opt).run();
     }
 }
