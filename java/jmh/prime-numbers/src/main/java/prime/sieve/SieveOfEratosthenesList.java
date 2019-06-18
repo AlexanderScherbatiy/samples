@@ -1,15 +1,24 @@
 package prime.sieve;
 
-public class SieveOfEratosthenesIntArray {
+public class SieveOfEratosthenesList {
 
-    public static int[] findPrimes(int primesSize, int sieveSize) {
+    public static class PrimeNode {
+        public final int prime;
+        public final PrimeNode next;
+        private int nextIndex;
+
+        public PrimeNode(int prime, PrimeNode next) {
+            this.prime = prime;
+            this.next = next;
+            nextIndex = prime << 1;
+        }
+    }
+
+    public static PrimeNode findPrimes(int primesSize, int sieveSize) {
 
         int maxPrimeIndex = primesSize - 1;
 
-        int[] primes = new int[primesSize];
-        int[] nextIndices = new int[primesSize];
-        primes[0] = 2;
-        nextIndices[0] = 4;
+        PrimeNode head = new PrimeNode(2, null);
         int primesCount = 1;
 
 
@@ -25,40 +34,42 @@ public class SieveOfEratosthenesIntArray {
 
         while (true) {
 
-            for (int i = 0; i < primesCount; i++) {
+            PrimeNode node = head;
+
+            while (node != null) {
                 // Mark Loop: Begin
-                int prime = primes[i];
-                int nextIndex = nextIndices[i];
+                int prime = node.prime;
+                int nextIndex = node.nextIndex;
 
                 while (nextIndex < maxIndex) {
                     marked[nextIndex - baseIndex] = true;
                     nextIndex += prime;
                 }
 
-                nextIndices[i] = nextIndex;
+                node.nextIndex = nextIndex;
+                node = node.next;
                 // Mark Loop: End
             }
-
 
             for (int i = 0; i < sieveSize; i++) {
                 if (!marked[i]) {
 
                     int prime = baseIndex + i;
-                    primes[primesCount] = prime;
+                    head = new PrimeNode(prime, head);
 
                     if (primesCount == maxPrimeIndex) {
-                        return primes;
+                        return head;
                     }
 
                     // Mark Loop: Begin
-                    int nextIndex = prime << 1;
+                    int nextIndex = head.nextIndex;
 
                     while (nextIndex < maxIndex) {
                         marked[nextIndex - baseIndex] = true;
                         nextIndex += prime;
                     }
 
-                    nextIndices[primesCount] = nextIndex;
+                    head.nextIndex = nextIndex;
                     // Mark Loop: End
 
                     primesCount++;
@@ -73,10 +84,15 @@ public class SieveOfEratosthenesIntArray {
     }
 
     public static void main(String[] args) {
-        int[] primes = findPrimes(1000, 100);
+
+        final int primeSize = 1000;
+        PrimeNode node = findPrimes(primeSize, 100);
         System.out.printf("Primes:%n");
-        for (int i = 0; i < primes.length; i++) {
-            System.out.printf("prime[%d]=%d%n", i, primes[i]);
+
+        int i = primeSize;
+        while (node != null) {
+            System.out.printf("prime[%d]=%d%n", i--, node.prime);
+            node = node.next;
         }
     }
 }

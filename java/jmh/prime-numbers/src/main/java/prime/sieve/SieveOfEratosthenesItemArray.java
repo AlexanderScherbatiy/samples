@@ -61,7 +61,7 @@ public class SieveOfEratosthenesItemArray {
                     }
 
                     // Mark Loop: Begin
-                    int nextIndex = prime + prime;
+                    int nextIndex = prime << 1;
 
                     while (nextIndex < maxIndex) {
                         marked[nextIndex - baseIndex] = true;
@@ -86,7 +86,7 @@ public class SieveOfEratosthenesItemArray {
         PrimeItem[] primes = findPrimes(1000, 100);
         System.out.printf("Primes:%n");
         for (int i = 0; i < primes.length; i++) {
-            System.out.printf("prime[%d]=%d%n", i, primes[i].prime);
+            System.out.printf("prime[%d]=%d%n", i + 1, primes[i].prime);
         }
     }
 }
