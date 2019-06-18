@@ -1,15 +1,18 @@
-package prime.sieve;
+package prime.benchmark;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import prime.sieve.SieveOfEratosthenesIntArray;
+import prime.sieve.SieveOfEratosthenesItemArray;
+import prime.sieve.SieveOfEratosthenesList;
 
 import java.util.concurrent.TimeUnit;
 
-import static prime.sieve.SieveOfEratosthenesItemArray.PrimeItem;
 import static prime.sieve.SieveOfEratosthenesList.PrimeNode;
+import static prime.sieve.SieveOfEratosthenesItemArray.PrimeItem;
 
 @BenchmarkMode({Mode.SampleTime, Mode.AverageTime, Mode.Throughput, Mode.SingleShotTime})
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -17,35 +20,35 @@ import static prime.sieve.SieveOfEratosthenesList.PrimeNode;
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 @State(Scope.Benchmark)
-public class PrimesSizeBenchmark {
+public class SieveSizeBenchmark {
 
-    private static final int SIEVE_SIZE = 10_000;
+    private static final int PRIMES_NUM = 10_000;
 
-    @Param({"1000", "10000", "50000", "100000"})
-    int primesNum;
+    @Param({"100", "1000", "10000", "100000", "1000000"})
+    int sieveSize;
 
     @Benchmark
     public int[] testPrimesIntArray() {
-        return SieveOfEratosthenesIntArray.findPrimes(primesNum, SIEVE_SIZE);
+        return SieveOfEratosthenesIntArray.findPrimes(PRIMES_NUM, sieveSize);
     }
 
     @Benchmark
     public PrimeItem[] testPrimesItemArray() {
-        return SieveOfEratosthenesItemArray.findPrimes(primesNum, SIEVE_SIZE);
+        return SieveOfEratosthenesItemArray.findPrimes(PRIMES_NUM, sieveSize);
     }
 
     @Benchmark
     public PrimeNode testPrimesList() {
-        return SieveOfEratosthenesList.findPrimes(primesNum, SIEVE_SIZE);
+        return SieveOfEratosthenesList.findPrimes(PRIMES_NUM, sieveSize);
     }
 
     public static void main(String[] args) throws RunnerException {
 
         Options opt = new OptionsBuilder()
 
-                .include(PrimesSizeBenchmark.class.getSimpleName())
+                .include(SieveSizeBenchmark.class.getSimpleName())
                 // Use this to selectively constrain/override parameters
-                .param("primesNum", "1000", "10000", "100000")
+                .param("sieveSize", "1000", "10000", "100000")
                 .build();
 
         new Runner(opt).run();
