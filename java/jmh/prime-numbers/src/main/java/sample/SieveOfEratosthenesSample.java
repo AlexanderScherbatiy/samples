@@ -1,6 +1,6 @@
 package sample;
 
-import prime.sieve.SieveOfEratosthenes;
+import prime.sieve.SieveOfEratosthenesIntArray;
 
 public class SieveOfEratosthenesSample {
 
@@ -11,7 +11,8 @@ public class SieveOfEratosthenesSample {
         //   10:   29
         //  100:  541
         // 1000: 7919
-        int[] primes = SieveOfEratosthenes.findPrimes(1000, 20);
+
+        int[] primes = SieveOfEratosthenesIntArray.findPrimes(1000, 100);
         System.out.printf("Primes:%n");
         for (int i = 0; i < primes.length; i++) {
             System.out.printf("prime[%d]=%d%n", i, primes[i]);

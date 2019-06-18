@@ -8,6 +8,8 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.concurrent.TimeUnit;
 
+import static prime.sieve.SieveOfEratosthenesItemArray.PrimeItem;
+
 @BenchmarkMode({Mode.SampleTime, Mode.AverageTime, Mode.Throughput, Mode.SingleShotTime})
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -16,14 +18,20 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 public class SieveOfEratosthenesBenchmark {
 
-    @Param({"10", "100", "1000", "10000", "100000"})
+    private static final int PRIMES_NUM = 10_000;
+
+    @Param({"100", "1000", "10000", "100000", "1000000"})
     int sieveSize;
 
     @Benchmark
-    public int[] testPrimes() {
-        return SieveOfEratosthenes.findPrimes(10_000, sieveSize);
+    public int[] testPrimesIntArray() {
+        return SieveOfEratosthenesIntArray.findPrimes(PRIMES_NUM, sieveSize);
     }
 
+    @Benchmark
+    public PrimeItem[] testPrimesItemArray() {
+        return SieveOfEratosthenesItemArray.findPrimes(PRIMES_NUM, sieveSize);
+    }
 
     public static void main(String[] args) throws RunnerException {
 

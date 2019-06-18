@@ -1,15 +1,15 @@
 package prime.sieve;
 
-public class SieveOfEratosthenes {
+public class SieveOfEratosthenesIntArray {
 
     public static int[] findPrimes(int primesSize, int sieveSize) {
 
         int maxPrimeIndex = primesSize - 1;
 
         int[] primes = new int[primesSize];
-        int[] lastIndices = new int[primesSize];
+        int[] nextIndices = new int[primesSize];
         primes[0] = 2;
-        lastIndices[0] = 4;
+        nextIndices[0] = 4;
         int primesCount = 1;
 
 
@@ -28,14 +28,14 @@ public class SieveOfEratosthenes {
             for (int i = 0; i < primesCount; i++) {
                 // Mark Loop: Begin
                 int prime = primes[i];
-                int nextIndex = lastIndices[i];
+                int nextIndex = nextIndices[i];
 
                 while (nextIndex < maxIndex) {
                     marked[nextIndex - baseIndex] = true;
                     nextIndex += prime;
                 }
 
-                lastIndices[i] = nextIndex;
+                nextIndices[i] = nextIndex;
                 // Mark Loop: End
             }
 
@@ -58,7 +58,7 @@ public class SieveOfEratosthenes {
                         nextIndex += prime;
                     }
 
-                    lastIndices[primesCount] = nextIndex;
+                    nextIndices[primesCount] = nextIndex;
                     // Mark Loop: End
 
                     primesCount++;
@@ -69,6 +69,14 @@ public class SieveOfEratosthenes {
 
             baseIndex = maxIndex;
             maxIndex += sieveSize;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] primes = findPrimes(1000, 100);
+        System.out.printf("Primes:%n");
+        for (int i = 0; i < primes.length; i++) {
+            System.out.printf("prime[%d]=%d%n", i, primes[i]);
         }
     }
 }
