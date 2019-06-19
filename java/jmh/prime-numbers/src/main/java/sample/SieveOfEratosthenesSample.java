@@ -1,6 +1,5 @@
 package sample;
 
-import prime.sieve.SieveOfEratosthenesIntArray;
 import prime.sieve.SieveOfEratosthenesLongArray;
 
 public class SieveOfEratosthenesSample {
@@ -8,11 +7,12 @@ public class SieveOfEratosthenesSample {
     public static void main(String[] args) {
 
         // Prime numbers
-        //   10:   29
-        //  100:  541
-        // 1000: 7919
+        //    10:     29
+        //   100:    541
+        //  1000:   7919
+        // 10000: 104729
 
-        int primesSize = 1000;
+        int primesSize = 1_000;
         int N = 5;
 
         if (args.length > 0) {

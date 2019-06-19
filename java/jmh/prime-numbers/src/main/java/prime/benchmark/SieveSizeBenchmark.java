@@ -6,15 +6,17 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import prime.sieve.SieveOfEratosthenesIntArray;
+import prime.sieve.SieveOfEratosthenesIntBuffer;
 import prime.sieve.SieveOfEratosthenesItemArray;
 import prime.sieve.SieveOfEratosthenesList;
 
+import java.nio.IntBuffer;
 import java.util.concurrent.TimeUnit;
 
 import static prime.sieve.SieveOfEratosthenesList.PrimeNode;
 import static prime.sieve.SieveOfEratosthenesItemArray.PrimeItem;
 
-@BenchmarkMode({Mode.SampleTime, Mode.AverageTime, Mode.Throughput, Mode.SingleShotTime})
+@BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -30,6 +32,11 @@ public class SieveSizeBenchmark {
     @Benchmark
     public int[] testPrimesIntArray() {
         return SieveOfEratosthenesIntArray.findPrimes(PRIMES_NUM, sieveSize);
+    }
+
+    @Benchmark
+    public IntBuffer testPrimesIntBuffer() {
+        return SieveOfEratosthenesIntBuffer.findPrimes(PRIMES_NUM, sieveSize);
     }
 
     @Benchmark
