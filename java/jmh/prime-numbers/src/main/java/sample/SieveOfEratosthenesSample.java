@@ -1,19 +1,19 @@
 package sample;
 
 import prime.sieve.SieveOfEratosthenesIntArray;
+import prime.sieve.SieveOfEratosthenesLongArray;
 
 public class SieveOfEratosthenesSample {
 
     public static void main(String[] args) {
-
 
         // Prime numbers
         //   10:   29
         //  100:  541
         // 1000: 7919
 
-
         int primesSize = 1000;
+        int N = 5;
 
         if (args.length > 0) {
             try {
@@ -25,9 +25,14 @@ public class SieveOfEratosthenesSample {
         }
 
         long time = System.nanoTime();
-        int[] primes = SieveOfEratosthenesIntArray.findPrimes(primesSize, 10000);
+        long[] primes = SieveOfEratosthenesLongArray.findPrimes(primesSize, 10000);
         time = System.nanoTime() - time;
-        System.out.printf("last prime[%d]: %d%n", primesSize, primes[primesSize - 1]);
+
+        System.out.printf("Last %d prime numbers:%n", N);
+        for (int i = Math.max(primesSize - N, 0); i < primesSize; i++) {
+            System.out.printf("Prime number[%d]: %d%n", i + 1, primes[i]);
+        }
+
         System.out.printf("Elapsed time: %.3f s%n", time / 1e9);
     }
 }
