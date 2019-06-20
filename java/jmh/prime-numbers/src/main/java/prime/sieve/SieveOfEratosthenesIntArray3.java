@@ -1,16 +1,18 @@
 package prime.sieve;
 
-public class SieveOfEratosthenesIntArray {
+public class SieveOfEratosthenesIntArray3 {
 
-    // Prime numbers and next indices are stored in separate arrays.
+
+    // Prime numbers and next indices are stored in the same array.
+    // index of prime = i
+    // index of next index = i + primesSize
     public static int[] findPrimes(int primesSize, int sieveSize) {
 
         int maxPrimeIndex = primesSize - 1;
 
-        int[] primes = new int[primesSize];
-        int[] nextIndices = new int[primesSize];
-        primes[0] = 2;
-        nextIndices[0] = 4;
+        int[] primesWithIndices = new int[primesSize << 1];
+        primesWithIndices[0] = 2;
+        primesWithIndices[primesSize] = 4;
         int primesCount = 1;
 
 
@@ -28,15 +30,16 @@ public class SieveOfEratosthenesIntArray {
 
             for (int i = 0; i < primesCount; i++) {
                 // Mark Loop: Begin
-                int prime = primes[i];
-                int nextIndex = nextIndices[i];
+
+                int prime = primesWithIndices[i];
+                int nextIndex = primesWithIndices[i + primesSize];
 
                 while (nextIndex < maxIndex) {
                     marked[nextIndex - baseIndex] = true;
                     nextIndex += prime;
                 }
 
-                nextIndices[i] = nextIndex;
+                primesWithIndices[i + primesSize] = nextIndex;
                 // Mark Loop: End
             }
 
@@ -44,11 +47,12 @@ public class SieveOfEratosthenesIntArray {
             for (int i = 0; i < sieveSize; i++) {
                 if (!marked[i]) {
 
+
                     int prime = baseIndex + i;
-                    primes[primesCount] = prime;
+                    primesWithIndices[primesCount] = prime;
 
                     if (primesCount == maxPrimeIndex) {
-                        return primes;
+                        return primesWithIndices;
                     }
 
                     // Mark Loop: Begin
@@ -59,7 +63,7 @@ public class SieveOfEratosthenesIntArray {
                         nextIndex += prime;
                     }
 
-                    nextIndices[primesCount] = nextIndex;
+                    primesWithIndices[primesCount + primesSize] = nextIndex;
                     // Mark Loop: End
 
                     primesCount++;
