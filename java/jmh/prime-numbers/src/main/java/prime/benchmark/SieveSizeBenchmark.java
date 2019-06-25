@@ -21,14 +21,21 @@ import static prime.sieve.SieveOfEratosthenesItemArray.PrimeItem;
 @State(Scope.Benchmark)
 public class SieveSizeBenchmark {
 
-    private static final int PRIMES_NUM = 10_000;
+    private static final int ROWS = 100;
+    private static final int COLUMNS = 100;
+    private static final int PRIMES_NUM = ROWS * COLUMNS;
 
-    @Param({"100", "1000", "10000", "100000", "1000000"})
+    @Param({"1000", "10000", "100000", "1000000"})
     int sieveSize;
 
     @Benchmark
     public int[] testPrimesIntArray() {
         return SieveOfEratosthenesIntArray.findPrimes(PRIMES_NUM, sieveSize);
+    }
+
+    @Benchmark
+    public int[][] testPrimesIntArray2D() {
+        return SieveOfEratosthenesIntArray2D.findPrimes(ROWS, COLUMNS, sieveSize);
     }
 
     @Benchmark
