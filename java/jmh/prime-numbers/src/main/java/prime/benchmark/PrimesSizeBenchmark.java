@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import static prime.sieve.SieveOfEratosthenesItemArray.PrimeItem;
 import static prime.sieve.SieveOfEratosthenesList.PrimeNode;
 
-@BenchmarkMode({Mode.SampleTime, Mode.AverageTime, Mode.Throughput, Mode.SingleShotTime})
+@BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)

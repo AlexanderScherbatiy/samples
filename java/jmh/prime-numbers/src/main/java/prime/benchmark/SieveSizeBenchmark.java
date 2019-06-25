@@ -39,16 +39,6 @@ public class SieveSizeBenchmark {
     }
 
     @Benchmark
-    public int[] testPrimesIntArray2() {
-        return SieveOfEratosthenesIntArray2.findPrimes(PRIMES_NUM, sieveSize);
-    }
-
-    @Benchmark
-    public int[] testPrimesIntArray3() {
-        return SieveOfEratosthenesIntArray3.findPrimes(PRIMES_NUM, sieveSize);
-    }
-
-    @Benchmark
     public IntBuffer testPrimesIntBuffer() {
         return SieveOfEratosthenesIntBuffer.findPrimes(PRIMES_NUM, sieveSize);
     }
