@@ -34,6 +34,11 @@ public class SieveSizeBenchmark {
     }
 
     @Benchmark
+    public int[] testPrimesIntArrayMarkCounter() {
+        return SieveOfEratosthenesIntArrayMarkCounter.findPrimes(PRIMES_NUM, sieveSize);
+    }
+
+    @Benchmark
     public int[][] testPrimesIntArray2D() {
         return SieveOfEratosthenesIntArray2D.findPrimes(ROWS, COLUMNS, sieveSize);
     }
