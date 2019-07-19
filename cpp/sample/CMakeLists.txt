@@ -7,6 +7,14 @@ SET (CMAKE_CXX_STANDARD 11)
 
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
 
+# Configure CCache if available
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    message("Use ccache.")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif(CCACHE_FOUND)
+
 add_library(stacktrace SHARED lib/stacktrace.h)
 set_target_properties(stacktrace PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(stacktrace PUBLIC ${CMAKE_CURRENT_LIST_DIR}/lib)
