@@ -7,9 +7,9 @@ repositories {
     jcenter()
     // for  com.sleepycat:je:7.5.11
     maven { url 'http://download.oracle.com/maven' }
-}`
+}
 
- mainClassName = 'sample.JanusGraphSample'
+mainClassName = 'sample.JanusGraphSample'
 
 dependencies {
 
