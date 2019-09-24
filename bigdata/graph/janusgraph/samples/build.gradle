@@ -1,0 +1,22 @@
+plugins {
+    id 'application'
+}
+
+
+repositories {
+    jcenter()
+    // for  com.sleepycat:je:7.5.11
+    maven { url 'http://download.oracle.com/maven' }
+}`
+
+ mainClassName = 'sample.JanusGraphSample'
+
+dependencies {
+
+    // JanusGraph
+    compile group: 'org.janusgraph', name: 'janusgraph-core', version: '0.4.0'
+
+    // testCompile group: 'org.janusgraph', name: 'janusgraph-berkeleyje', version: '0.4.0'
+    // testCompile group: 'org.janusgraph', name: 'janusgraph-lucene', version: '0.4.0'
+}
+
