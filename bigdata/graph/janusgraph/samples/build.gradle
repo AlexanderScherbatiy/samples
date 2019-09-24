@@ -16,8 +16,10 @@ dependencies {
     // JanusGraph
     compile group: 'org.janusgraph', name: 'janusgraph-core', version: '0.4.0'
 
-    // testCompile group: 'org.janusgraph', name: 'janusgraph-berkeleyje', version: '0.4.0'
-    // testCompile group: 'org.janusgraph', name: 'janusgraph-lucene', version: '0.4.0'
+    compile group: 'org.janusgraph', name: 'janusgraph-berkeleyje', version: '0.4.0'
+    compile group: 'org.janusgraph', name: 'janusgraph-lucene', version: '0.4.0'
+
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.28'

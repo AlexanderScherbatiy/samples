@@ -1,5 +1,6 @@
 package sample;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.T;
 import org.janusgraph.core.JanusGraph;
@@ -7,6 +8,9 @@ import org.janusgraph.core.JanusGraphFactory;
 import org.janusgraph.core.JanusGraphTransaction;
 import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.janusgraph.graphdb.idmanagement.IDManager;
+
+import java.io.File;
+import java.io.IOException;
 
 public class JanusGraphSample {
 
@@ -21,20 +25,29 @@ public class JanusGraphSample {
     }
 
     private static JanusGraph getJanusGraph(boolean customIds) {
+
+        String storageDirectory = "/tmp/janusgraph/sample";
+
+        removeDir(storageDirectory);
+
         JanusGraphFactory.Builder builder = JanusGraphFactory
                 .build()
+                .set("storage.backend", "berkeleyje")
+                .set("storage.directory", String.format("%s/graph", storageDirectory))
                 //.set("query.force-index", true)
-                .set("storage.backend", "inmemory");
+                .set("index.search.backend", "lucene")
+                .set("index.search.directory", String.format("%s/index", storageDirectory));
+
+//        JanusGraphFactory.Builder builder = JanusGraphFactory
+//                .build()
+//                //.set("query.force-index", true)
+//                .set("storage.backend", "inmemory");
 
         if (customIds) {
             builder = builder.set("graph.set-vertex-id", "true");
         }
 
         return builder.open();
-    }
-
-    static void clearGraph(GraphTraversalSource g) {
-        g.V().drop().iterate();
     }
 
     static void clearGraph(JanusGraph graph) {
@@ -105,6 +118,14 @@ public class JanusGraphSample {
 
             long vertices = verticesCount(graph);
             System.out.printf("added vertices: %d%n", vertices);
+        }
+    }
+
+    private static void removeDir(String dir) {
+        try {
+            FileUtils.deleteDirectory(new File(dir));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
