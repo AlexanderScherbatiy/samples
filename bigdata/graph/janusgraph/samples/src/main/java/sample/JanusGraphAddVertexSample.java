@@ -12,7 +12,7 @@ import org.janusgraph.graphdb.idmanagement.IDManager;
 import java.io.File;
 import java.io.IOException;
 
-public class JanusGraphSample {
+public class JanusGraphAddVertexSample {
 
     private static final String LABEL = "SampleLabel";
     private static final String KEY = "SampleKey";
