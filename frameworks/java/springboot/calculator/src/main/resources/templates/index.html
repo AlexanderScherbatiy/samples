@@ -5,9 +5,12 @@
     <title>Calculator</title>
 </head>
 <body>
+
 <h1>Choose calculator:</h1>
 <ul>
-    <li><a href="/classic"> Classic </a></li>
+    <li th:each="item : ${refs}">
+        <a th:href="${item}" th:text="${item}">calculator</a>
+    </li>
 </ul>
 
 </body>
