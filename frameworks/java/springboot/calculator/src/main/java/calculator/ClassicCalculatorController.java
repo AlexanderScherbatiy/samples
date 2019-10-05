@@ -1,14 +1,16 @@
 package calculator;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
+@RequestMapping("/classic")
 public class ClassicCalculatorController {
 
-    @RequestMapping("/classic")
-    public String index() {
-        return "Welcome to Classic calculator!";
+    @GetMapping
+    public String calculate() {
+        return "classic";
     }
 
 }
