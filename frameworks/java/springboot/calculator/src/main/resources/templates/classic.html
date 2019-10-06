@@ -8,5 +8,12 @@
 
 <h1>Classic calculator:</h1>
 
+<form th:object="${expression}" method="POST">
+    <p>operation: <input type="text" th:field="*{operation}"/></p>
+    <p>a: <input type="text" th:field="*{a}"/></p>
+    <p>b: <input type="text" th:field="*{b}"/></p>
+    <button>Calculate</button>
+</form>
+
 </body>
 </html>

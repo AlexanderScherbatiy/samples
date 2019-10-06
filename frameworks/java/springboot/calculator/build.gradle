@@ -16,6 +16,9 @@ plugins {
 group = 'example.web.calculator'
 version = '0.0.1-SNAPSHOT'
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 bootJar {
     baseName = 'gs-spring-boot'
     version = '0.1.0'
@@ -24,9 +27,6 @@ bootJar {
 repositories {
     mavenCentral()
 }
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 configurations {
     developmentOnly
@@ -39,6 +39,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
     //compile("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
