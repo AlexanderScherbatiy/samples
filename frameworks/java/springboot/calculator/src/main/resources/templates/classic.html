@@ -15,5 +15,16 @@
     <button>Calculate</button>
 </form>
 
+
+<div th:if="${not #lists.isEmpty(results)}">
+    <h2> Results: <h2>
+</div>
+
+<ul>
+    <li th:each="result : ${results}">
+        <span th:text="${result}">Result</span>
+    </li>
+</ul>
+
 </body>
 </html>
