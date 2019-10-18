@@ -1,12 +1,9 @@
 package calculator;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Data;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +15,43 @@ public class ClassicCalculatorController {
     List<String> results = new ArrayList<>();
 
     @GetMapping
-    public String calculateForm(Model model) {
-        model.addAttribute("expression", new Expression());
-        model.addAttribute("results", results);
+    public String getForm(Model model) {
+        //System.out.printf("GET%n");
+        ClassicCalculatorInput input = new ClassicCalculatorInput();
+        initModel(input, model);
         return "classic";
     }
 
     @PostMapping
-    public String calculateSubmit(@ModelAttribute Expression expression, Model model) {
-        results.add(Double.toString(expression.calculate()));
-        model.addAttribute("expression", new Expression());
-        model.addAttribute("results", results);
+    public String postForm(@ModelAttribute ClassicCalculatorInput input,
+                           Model model) {
+        //System.out.printf("POST%n");
+        //System.out.printf("input: %s%n", input);
+        Operation op = Operation.valueOf(input.selectedOperation);
+        double value = op.calculate(input.value1, input.value2);
+        String result = String.format("%f %s %f = %f", input.value1, op, input.value2, value);
+        results.add(result);
+        initModel(input, model);
         return "classic";
+    }
+
+    private void initModel(ClassicCalculatorInput input, Model model) {
+
+        Operation[] values = Operation.values();
+        List<String> operations = new ArrayList<>(values.length);
+        for (Operation operation : values) {
+            operations.add(operation.toString());
+        }
+
+        model.addAttribute("operations", operations);
+        model.addAttribute("input", input);
+        model.addAttribute("results", results);
+    }
+
+    @Data
+    public static class ClassicCalculatorInput {
+        private double value1;
+        private double value2;
+        private String selectedOperation = Operation.PLUS.toString();
     }
 }
