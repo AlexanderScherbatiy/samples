@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/classic")
 public class ClassicCalculatorController {
 
+    int maxResultsSize = 3;
     List<String> results = new LinkedList<>(); // insert element into head
 
     @GetMapping
@@ -33,7 +34,7 @@ public class ClassicCalculatorController {
         //System.out.printf("input: %s%n", input);
         Operation op = Operation.fromName(input.selectedOperation);
         double value = op.calculate(input.value1, input.value2);
-        String result = String.format("%f %s %f = %f", input.value1, op, input.value2, value);
+        String result = String.format("%.2f %s %.2f = %.2f", input.value1, op, input.value2, value);
         results.add(0, result);
         initModel(input, model);
         return "classic";
@@ -49,7 +50,8 @@ public class ClassicCalculatorController {
 
         model.addAttribute("operations", operations);
         model.addAttribute("input", input);
-        model.addAttribute("results", results);
+        int size = Math.min(maxResultsSize, results.size());
+        model.addAttribute("results", results.subList(0, size));
     }
 
     @Data
