@@ -26,14 +26,14 @@
 
 
 <div th:if="${not #lists.isEmpty(results)}">
-    <h2> History: <h2>
+    <h2> History: </h2>
+    <ul>
+        <li th:each="result : ${results}">
+            <span th:text="${result}">Result</span>
+        </li>
+    </ul>
 </div>
 
-<ul>
-    <li th:each="result : ${results}">
-        <span th:text="${result}">Result</span>
-    </li>
-</ul>
 
 </body>
 </html>

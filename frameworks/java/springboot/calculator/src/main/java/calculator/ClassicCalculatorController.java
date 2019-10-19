@@ -3,16 +3,20 @@ package calculator;
 import lombok.Data;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/classic")
 public class ClassicCalculatorController {
 
-    List<String> results = new ArrayList<>();
+    List<String> results = new LinkedList<>(); // insert element into head
 
     @GetMapping
     public String getForm(Model model) {
@@ -27,10 +31,10 @@ public class ClassicCalculatorController {
                            Model model) {
         //System.out.printf("POST%n");
         //System.out.printf("input: %s%n", input);
-        Operation op = Operation.valueOf(input.selectedOperation);
+        Operation op = Operation.fromName(input.selectedOperation);
         double value = op.calculate(input.value1, input.value2);
         String result = String.format("%f %s %f = %f", input.value1, op, input.value2, value);
-        results.add(result);
+        results.add(0, result);
         initModel(input, model);
         return "classic";
     }
