@@ -1,6 +1,7 @@
-package calculator;
+package calculator.classic;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,9 @@ public class ClassicCalculatorController {
     int maxResultsSize = 3;
     List<String> results = new LinkedList<>(); // insert element into head
 
+    @Autowired
+    ClassicCalculatorRepository repository;
+
     @GetMapping
     public String getForm(Model model) {
         //System.out.printf("GET%n");
@@ -34,6 +38,10 @@ public class ClassicCalculatorController {
         //System.out.printf("input: %s%n", input);
         Operation op = Operation.fromName(input.selectedOperation);
         double value = op.calculate(input.value1, input.value2);
+
+        ClassicCalculatorRecord record = toRecord(input);
+        repository.save(record);
+
         String result = String.format("%.2f %s %.2f = %.2f", input.value1, op, input.value2, value);
         results.add(0, result);
         initModel(input, model);
@@ -50,8 +58,28 @@ public class ClassicCalculatorController {
 
         model.addAttribute("operations", operations);
         model.addAttribute("input", input);
+
+        Iterable<ClassicCalculatorRecord> records = repository.findAll();
+        for (ClassicCalculatorRecord record : records) {
+            System.out.printf("record: %s%n", record);
+        }
+
         int size = Math.min(maxResultsSize, results.size());
         model.addAttribute("results", results.subList(0, size));
+    }
+
+    private static ClassicCalculatorRecord toRecord(ClassicCalculatorInput input) {
+        ClassicCalculatorRecord record = new ClassicCalculatorRecord();
+
+        record.setValue1(input.value1);
+        record.setValue2(input.value2);
+        record.setOperation(input.selectedOperation);
+
+        Operation op = Operation.fromName(input.selectedOperation);
+        double value = op.calculate(input.value1, input.value2);
+        record.setResult(value);
+
+        return record;
     }
 
     @Data

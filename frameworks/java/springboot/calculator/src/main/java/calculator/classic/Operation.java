@@ -1,4 +1,4 @@
-package calculator;
+package calculator.classic;
 
 public enum Operation {
     PLUS("+"),
