@@ -2,6 +2,9 @@ package calculator.classic;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -18,7 +20,6 @@ import java.util.List;
 public class ClassicCalculatorController {
 
     int maxResultsSize = 3;
-    List<String> results = new LinkedList<>(); // insert element into head
 
     @Autowired
     ClassicCalculatorRepository repository;
@@ -36,14 +37,10 @@ public class ClassicCalculatorController {
                            Model model) {
         //System.out.printf("POST%n");
         //System.out.printf("input: %s%n", input);
-        Operation op = Operation.fromName(input.selectedOperation);
-        double value = op.calculate(input.value1, input.value2);
 
         ClassicCalculatorRecord record = toRecord(input);
         repository.save(record);
 
-        String result = String.format("%.2f %s %.2f = %.2f", input.value1, op, input.value2, value);
-        results.add(0, result);
         initModel(input, model);
         return "classic";
     }
@@ -58,14 +55,23 @@ public class ClassicCalculatorController {
 
         model.addAttribute("operations", operations);
         model.addAttribute("input", input);
+        model.addAttribute("results", getRecords());
+    }
 
-        Iterable<ClassicCalculatorRecord> records = repository.findAll();
+    private List<String> getRecords() {
+
+        Sort sortedByDate = Sort.by("createdAt").descending();
+        Pageable paging = PageRequest.of(0, maxResultsSize, sortedByDate);
+
+        Iterable<ClassicCalculatorRecord> records = repository.findAll(paging);
+
+        List<String> results = new ArrayList<>();
+
         for (ClassicCalculatorRecord record : records) {
-            System.out.printf("record: %s%n", record);
+            results.add(record.format());
         }
 
-        int size = Math.min(maxResultsSize, results.size());
-        model.addAttribute("results", results.subList(0, size));
+        return results;
     }
 
     private static ClassicCalculatorRecord toRecord(ClassicCalculatorInput input) {

@@ -1,6 +1,6 @@
 package calculator.classic;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface ClassicCalculatorRepository extends CrudRepository<ClassicCalculatorRecord, String> {
+public interface ClassicCalculatorRepository extends PagingAndSortingRepository<ClassicCalculatorRecord, String> {
 }
