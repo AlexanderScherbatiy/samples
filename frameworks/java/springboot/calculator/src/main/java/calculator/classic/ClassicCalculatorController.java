@@ -19,7 +19,8 @@ import java.util.List;
 @RequestMapping("/classic")
 public class ClassicCalculatorController {
 
-    int maxResultsSize = 3;
+    @Autowired
+    ClassicCalculatorProperties properties;
 
     @Autowired
     ClassicCalculatorRepository repository;
@@ -61,7 +62,8 @@ public class ClassicCalculatorController {
     private List<String> getRecords() {
 
         Sort sortedByDate = Sort.by("createdAt").descending();
-        Pageable paging = PageRequest.of(0, maxResultsSize, sortedByDate);
+        Pageable paging = PageRequest
+                .of(0, properties.getRecordsSize(), sortedByDate);
 
         Iterable<ClassicCalculatorRecord> records = repository.findAll(paging);
 
