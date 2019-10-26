@@ -10,7 +10,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/")
-public class CalculatorMainPageController {
+public class MainPageCalculatorController {
 
     @GetMapping
     public String index(Model model) {
