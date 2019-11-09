@@ -1,0 +1,28 @@
+plugins {
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
+}
+
+repositories {
+    jcenter()
+}
+
+shadowJar {
+    relocate 'org.apache.http', 'hidden.org.apache.http'
+    relocate 'org.apache.logging', 'hidden.org.apache.logging'
+    relocate 'org.apache.commons.codec', 'hidden.org.apache.commons.codec'
+    relocate 'org.apache.commons.logging', 'hidden.org.apache.commons.logging'
+}
+
+dependencies {
+
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+    compile group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: '7.4.2'
+
+    testCompile 'junit:junit:4.11'
+}
+
+mainClassName = 'books.sample.BooksSample'
