@@ -1,0 +1,1 @@
+void unresolved_function();
