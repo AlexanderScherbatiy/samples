@@ -15,6 +15,11 @@ suspend fun funB(): Int {
     return 20;
 }
 
+suspend fun funInfinity(): Int {
+    while(true);
+    return 20;
+}
+
 suspend fun <T> runWithTimeout(timeMillis: Long, defaultValue: T, block: suspend CoroutineScope.() -> T) : T =
      try {
         withTimeout(timeMillis) {
@@ -45,6 +50,14 @@ fun main() {
             }
 
             println("result B: $resB")
+
+            val resInfinity = runWithTimeout(waitTimeout, -3) {
+                //funInfinity()
+                30
+            }
+
+            println("result Infinity: $resInfinity")
+
             println()
         }
     }
