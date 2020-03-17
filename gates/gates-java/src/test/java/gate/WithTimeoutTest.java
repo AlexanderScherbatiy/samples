@@ -8,21 +8,59 @@ import java.util.function.Supplier;
 public class WithTimeoutTest {
 
     @Test
-    public void test() {
-        System.out.printf("Hello, Test!");
+    public void testReturnResult() {
 
-        Integer result = withTimeout(1000, WithTimeoutTest::funcA);
-        Assert.assertEquals(1, result.intValue());
+        int res = withTimeout(1000, -1, () -> {
+            delay(10);
+            return 1;
+        });
+
+        Assert.assertEquals(1, res);
     }
 
+    @Test
+    public void testTimeout() {
 
-    private static Integer funcA() {
-        delay(10);
-        return 1;
+        int res = withTimeout(10, -1, () -> {
+            delay(1000);
+            return 2;
+        });
+
+        Assert.assertEquals(-1, res);
     }
 
-    private static <T> T withTimeout(long timeout, Supplier<T> supplier) {
-        return supplier.get();
+    @Test
+    public void testInfinityLoop() {
+
+        int res = withTimeout(20, -5, () -> {
+            while (true) ;
+        });
+
+        Assert.assertEquals(-5, res);
+    }
+
+    private static <T> T withTimeout(long timeout, T defaultValue, Supplier<T> supplier) {
+
+        class RunnableWithResult implements Runnable {
+
+            private volatile T result = defaultValue;
+
+            @Override
+            public void run() {
+                result = supplier.get();
+            }
+        }
+
+        RunnableWithResult r = new RunnableWithResult();
+        Thread thread = new Thread(r);
+        thread.start();
+
+        try {
+            thread.join(timeout);
+            return r.result;
+        } catch (InterruptedException e) {
+            return defaultValue;
+        }
     }
 
     private static void delay(long waitTime) {
