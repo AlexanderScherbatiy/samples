@@ -1,18 +1,17 @@
-package gate;
+package datatype.invoker;
 
 import datatype.Invoker;
-import datatype.SimpleInvoker;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class InvokerTest {
+public abstract class InvokerTest {
 
-    Invoker invoker = new SimpleInvoker();
+    protected abstract Invoker getInvoker();
 
     @Test
     public void testReturnResult() {
 
-        int res = invoker.callWithTimeout(1000, -1, () -> {
+        int res = getInvoker().callWithTimeout(1000, -1, () -> {
             delay(10);
             return 1;
         });
@@ -23,7 +22,7 @@ public class InvokerTest {
     @Test
     public void testTimeout() {
 
-        int res = invoker.callWithTimeout(10, -1, () -> {
+        int res = getInvoker().callWithTimeout(10, -1, () -> {
             delay(1000);
             return 2;
         });
@@ -34,7 +33,7 @@ public class InvokerTest {
     @Test
     public void testInfinityLoop() {
 
-        int res = invoker.callWithTimeout(20, -5, () -> {
+        int res = getInvoker().callWithTimeout(20, -5, () -> {
             while (true) ;
         });
 
