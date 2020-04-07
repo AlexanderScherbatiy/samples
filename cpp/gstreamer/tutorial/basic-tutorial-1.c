@@ -5,7 +5,10 @@ int main (int argc, char *argv[]) {
   GstElement *pipeline;
   GstBus *bus;
   GstMessage *msg;
-  gchar uri[] = "https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm";
+  gchar *uri = "https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm";
+  if (argc > 1) {
+      uri = argv[1];
+  }
 
 
   /* Initialize GStreamer */
