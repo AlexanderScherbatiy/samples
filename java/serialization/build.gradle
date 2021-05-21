@@ -1,0 +1,18 @@
+plugins {
+    id 'application'
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+mainClassName = 'sample.Main'
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13'
+}
