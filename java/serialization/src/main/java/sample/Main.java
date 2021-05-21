@@ -13,5 +13,15 @@ public class Main {
         Hello deserializedHello = (Hello) byteBufferSerializer.deserialize(bytes);
 
         System.out.printf("byte buffer size: %d, hello string: %s%n", bytes.length, deserializedHello.hello());
+
+        ProtoHello.Hello protoHello = ProtoHello.Hello
+                .newBuilder()
+                .setName("Bob")
+                .build();
+
+        byte[] protobufBytes = protoHello.toByteArray();
+
+        ProtoHello.Hello deserializedProtoHello = ProtoHello.Hello.parseFrom(protobufBytes);
+        System.out.printf("protobuf buffer size: %d, name: %s%n", protobufBytes.length, deserializedProtoHello.getName());
     }
 }
