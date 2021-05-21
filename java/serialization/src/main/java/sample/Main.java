@@ -12,6 +12,6 @@ public class Main {
         byte[] bytes = byteBufferSerializer.serialize(hello);
         Hello deserializedHello = (Hello) byteBufferSerializer.deserialize(bytes);
 
-        System.out.printf("byte buffer serializer: %s%n", deserializedHello.hello());
+        System.out.printf("byte buffer size: %d, hello string: %s%n", bytes.length, deserializedHello.hello());
     }
 }
