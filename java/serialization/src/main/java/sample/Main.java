@@ -37,14 +37,16 @@ public class Main {
         }
 
         // ProtoBuf
-        ProtoHello.Hello protoHello = ProtoHello.Hello
+        ProtoPerson.Person protoPerson = ProtoPerson.Person
                 .newBuilder()
                 .setName("Alice")
+                .setAge(28)
                 .build();
 
-        byte[] protobufBytes = protoHello.toByteArray();
+        byte[] protobufBytes = protoPerson.toByteArray();
 
-        ProtoHello.Hello deserializedProtoHello = ProtoHello.Hello.parseFrom(protobufBytes);
-        System.out.printf("protobuf buffer size: %d, name: %s%n", protobufBytes.length, deserializedProtoHello.getName());
+        ProtoPerson.Person deserializedProtoAlice = ProtoPerson.Person.parseFrom(protobufBytes);
+        System.out.printf("protobuf buffer size: %d, name: %s, age: %d%n",
+                protobufBytes.length, deserializedProtoAlice.getName(), deserializedProtoAlice.getAge());
     }
 }
