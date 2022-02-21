@@ -11,7 +11,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}
     ${OPENGL_INCLUDE_DIRS}
     ${GLUT_INCLUDE_DIR}
-    ${GLEW_INCLUDE_DIR}
+    ${GLEW_INCLUDE_DIRS}
     )
 
 target_link_libraries(shapes
