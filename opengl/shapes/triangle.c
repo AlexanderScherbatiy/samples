@@ -5,6 +5,8 @@
 
 // https://open.gl/drawing
 
+#define INFO_LOG_SIZE 512
+
 const GLchar *vertexSource =
     "    #version 330 core\n"
     "    in vec2 position;\n"
@@ -19,6 +21,34 @@ const GLchar *fragmentSource =
     "    {\n"
     "        gl_FragColor = vec4(0.1, 0.5, 0.1, 1.0);\n"
     "    }\0";
+
+void checkCompileResult(GLuint shader, GLuint status, const char *msg)
+{
+    int success;
+    char infoLog[INFO_LOG_SIZE];
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
+    if (!success)
+    {
+        glGetShaderInfoLog(shader, INFO_LOG_SIZE, NULL, infoLog);
+        printf("%s: %s\n", msg, infoLog);
+        exit(EXIT_FAILURE);
+    }
+}
+
+void checkLinkResult(GLuint program, GLuint status, const char *msg)
+{
+    int success;
+    char infoLog[INFO_LOG_SIZE];
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+
+    if (!success)
+    {
+        glGetProgramInfoLog(program, INFO_LOG_SIZE, NULL, infoLog);
+        printf("%s: %s\n", msg, infoLog);
+        exit(EXIT_FAILURE);
+    }
+}
 
 void initShapes()
 {
@@ -43,17 +73,21 @@ void initShapes()
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
     glCompileShader(vertexShader);
+    checkCompileResult(vertexShader, GL_COMPILE_STATUS, "vertex shader compilation failed");
 
     // Create and compile the fragment shader
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShader);
+    checkCompileResult(fragmentShader, GL_COMPILE_STATUS, "fragment shader compilation failed");
 
     // Link the vertex and fragment shader into a shader program
     GLuint shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
+    checkLinkResult(shaderProgram, GL_LINK_STATUS, "shader program link failed");
+
     glUseProgram(shaderProgram);
 
     // Specify the layout of the vertex data
@@ -85,7 +119,7 @@ void key(unsigned char key, int x, int y)
     {
     case 27: // ESCAPE key
         printf("Exit shapes sample.\n");
-        exit(0);
+        glutLeaveMainLoop();
         break;
     }
 }
