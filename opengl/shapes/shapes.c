@@ -7,8 +7,9 @@
 
 // https://open.gl/drawing
 
-#define SHAPES_NUM 5
-#define SHAPE_RADIUS 0.2
+#define SHAPES_NUM 10
+#define WIN_WIDTH 480
+#define WIN_HEIGHT 800
 #define INFO_LOG_SIZE 512
 
 struct Bubble
@@ -53,6 +54,11 @@ const GLchar *fragmentSource =
     "    {\n"
     "        gl_FragColor = vec4(fragmentColor, 1.0);\n"
     "    }\0";
+
+double scaleToNDC(double value, double size)
+{
+    return (2.0 * (value / size)) - 1.0;
+}
 
 double rangeRandom(double min, double max)
 {
@@ -116,10 +122,12 @@ void initVertices()
         }
 
         // set coordinates
-        double x1 = bubble.x;
-        double y1 = bubble.y;
-        double x2 = x1 + SHAPE_RADIUS;
-        double y2 = y1 + SHAPE_RADIUS;
+        double x1 = scaleToNDC(bubble.x, WIN_WIDTH);
+        double y1 = scaleToNDC(bubble.y, WIN_WIDTH);
+        double rx = bubble.r / WIN_WIDTH;
+        double ry = bubble.r / WIN_HEIGHT;
+        double x2 = x1 + rx;
+        double y2 = y1 + ry;
 
         vertices[index + 0] = x1;
         vertices[index + 1] = y1;
@@ -145,10 +153,10 @@ void initShapes()
     for (int i = 0; i < SHAPES_NUM; i++)
     {
         struct Bubble bubble;
-        bubble.x = rangeRandom(-0.8, 0.8);
-        bubble.y = rangeRandom(-0.8, 0.8);
-        bubble.r = 0.2;
-        bubble.velocity = rangeRandom(0.01, 0.09);
+        bubble.x = rangeRandom(0, WIN_WIDTH);
+        bubble.y = rangeRandom(0, WIN_WIDTH);
+        bubble.r = 80;
+        bubble.velocity = rangeRandom(1.0, 5.0);
         bubble.red = 0.1;
         bubble.green = 0.1;
         bubble.blue = 0.8;
@@ -226,9 +234,9 @@ void updateShapes()
     for (int i = 0; i < SHAPES_NUM; i++)
     {
         bubbles[i].y -= bubbles[i].velocity;
-        if (bubbles[i].y < -0.8)
+        if (bubbles[i].y < 0)
         {
-            bubbles[i].y = 0.8;
+            bubbles[i].y = WIN_WIDTH;
         }
     }
 
@@ -287,7 +295,7 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA);
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
 
     glutInitContextVersion(3, 3);
     glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
