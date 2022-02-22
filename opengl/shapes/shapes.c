@@ -11,6 +11,19 @@
 #define SHAPE_RADIUS 0.2
 #define INFO_LOG_SIZE 512
 
+struct Bubble
+{
+    double x;
+    double y;
+    double r;
+    double velocity;
+    double red;
+    double green;
+    double blue;
+};
+
+struct Bubble bubbles[SHAPES_NUM];
+
 GLuint vao;
 GLuint vbo;
 GLuint ebo;
@@ -18,6 +31,9 @@ GLuint ebo;
 GLuint vertexShader;
 GLuint fragmentShader;
 GLuint shaderProgram;
+
+GLfloat vertices[4 * 5 * SHAPES_NUM];
+GLuint elements[6 * SHAPES_NUM];
 
 const GLchar *vertexSource =
     "    #version 330 core\n"
@@ -37,6 +53,11 @@ const GLchar *fragmentSource =
     "    {\n"
     "        gl_FragColor = vec4(fragmentColor, 1.0);\n"
     "    }\0";
+
+double rangeRandom(double min, double max)
+{
+    return min + (max - min) * ((double)rand() / (double)RAND_MAX);
+}
 
 void checkCompileResult(GLuint shader, GLuint status, const char *msg)
 {
@@ -66,21 +87,8 @@ void checkLinkResult(GLuint program, GLuint status, const char *msg)
     }
 }
 
-double sampleRand()
+void initVertices()
 {
-    return 1.6 * ((double)rand() / (double)RAND_MAX) - 0.8;
-}
-
-void initShapes()
-{
-    srand(time(NULL));
-
-    // Create Vertex Array Object
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    // Create a Vertex Buffer Object and copy the vertex data to it
-    glGenBuffers(1, &vbo);
 
     // (x, y, red, green, blue)
     // GLfloat vertices[] = {
@@ -93,22 +101,23 @@ void initShapes()
     int rows = 4;
     int columns = 5;
     int stride = rows * columns;
-    GLfloat vertices[stride * SHAPES_NUM];
     for (int i = 0; i < SHAPES_NUM; i++)
     {
+        struct Bubble bubble = bubbles[i];
         int index = i * stride;
+
         // set colors
         for (int j = 0; j < 4; j++)
         {
             int colorIndex = index + columns * j + 2;
-            vertices[colorIndex + 0] = 0.1;
-            vertices[colorIndex + 1] = 0.8;
-            vertices[colorIndex + 2] = 0.1;
+            vertices[colorIndex + 0] = bubble.red;
+            vertices[colorIndex + 1] = bubble.green;
+            vertices[colorIndex + 2] = bubble.blue;
         }
 
         // set coordinates
-        double x1 = sampleRand();
-        double y1 = sampleRand();
+        double x1 = bubble.x;
+        double y1 = bubble.y;
         double x2 = x1 + SHAPE_RADIUS;
         double y2 = y1 + SHAPE_RADIUS;
 
@@ -127,16 +136,41 @@ void initShapes()
         vertices[index + 0] = x1;
         vertices[index + 1] = y2;
     }
+}
 
+void initShapes()
+{
+    srand(time(NULL));
+
+    for (int i = 0; i < SHAPES_NUM; i++)
+    {
+        struct Bubble bubble;
+        bubble.x = rangeRandom(-0.8, 0.8);
+        bubble.y = rangeRandom(-0.8, 0.8);
+        bubble.r = 0.2;
+        bubble.velocity = rangeRandom(0.01, 0.09);
+        bubble.red = 0.1;
+        bubble.green = 0.1;
+        bubble.blue = 0.8;
+        bubbles[i] = bubble;
+    }
+
+    // Create Vertex Array Object
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    // Create a Vertex Buffer Object and copy the vertex data to it
+    glGenBuffers(1, &vbo);
+
+    initVertices();
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STREAM_DRAW);
 
     // GLuint elements[] = {
     //     0, 1, 2, // the fist triangle
     //     0, 3, 2  // the second triangle
     // };
 
-    GLuint elements[6 * SHAPES_NUM];
     for (int i = 0; i < SHAPES_NUM; i++)
     {
         int index = 6 * i;
@@ -152,7 +186,7 @@ void initShapes()
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 sizeof(elements), elements, GL_STATIC_DRAW);
+                 sizeof(elements), elements, GL_STREAM_DRAW);
 
     // Create and compile the vertex shader
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -185,6 +219,23 @@ void initShapes()
     glEnableVertexAttribArray(colAttrib);
     glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE,
                           5 * sizeof(float), (void *)(2 * sizeof(float)));
+}
+
+void updateShapes()
+{
+    for (int i = 0; i < SHAPES_NUM; i++)
+    {
+        bubbles[i].y -= bubbles[i].velocity;
+        if (bubbles[i].y < -0.8)
+        {
+            bubbles[i].y = 0.8;
+        }
+    }
+
+    initVertices();
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void deleteShapes()
@@ -222,6 +273,10 @@ void key(unsigned char key, int x, int y)
 {
     switch (key)
     {
+    case 'm':
+        updateShapes();
+        glutPostRedisplay();
+        break;
     case 27: // ESCAPE key
         exitApp();
         break;
