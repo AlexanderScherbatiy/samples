@@ -24,9 +24,10 @@ const GLchar *vertexSource =
 
 const GLchar *fragmentSource =
     "    #version 330 core\n"
+    "    uniform vec3 color;"
     "    void main()\n"
     "    {\n"
-    "        gl_FragColor = vec4(0.1, 0.5, 0.1, 1.0);\n"
+    "        gl_FragColor = vec4(color, 1.0);\n"
     "    }\0";
 
 void checkCompileResult(GLuint shader, GLuint status, const char *msg)
@@ -95,6 +96,9 @@ void initShapes()
 
     glUseProgram(shaderProgram);
 
+    GLint uniColor = glGetUniformLocation(shaderProgram, "color");
+    glUniform3f(uniColor, 0.1f, 0.5f, 0.1f);
+
     // Specify the layout of the vertex data
     GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(posAttrib);
@@ -125,6 +129,7 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Draw a triangle from the 3 vertices
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glutSwapBuffers();
 }
