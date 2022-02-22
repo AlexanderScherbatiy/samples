@@ -1,10 +1,14 @@
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
 // https://open.gl/drawing
 
+#define SHAPES_NUM 5
+#define SHAPE_RADIUS 0.2
 #define INFO_LOG_SIZE 512
 
 GLuint vao;
@@ -62,8 +66,15 @@ void checkLinkResult(GLuint program, GLuint status, const char *msg)
     }
 }
 
+double sampleRand()
+{
+    return 1.6 * ((double)rand() / (double)RAND_MAX) - 0.8;
+}
+
 void initShapes()
 {
+    srand(time(NULL));
+
     // Create Vertex Array Object
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -71,20 +82,72 @@ void initShapes()
     // Create a Vertex Buffer Object and copy the vertex data to it
     glGenBuffers(1, &vbo);
 
-    GLfloat vertices[] = {
-        -0.7f, 0.7f, 0.1, 0.8, 0.1,  // top left
-        0.7f, 0.7f, 0.1, 0.8, 0.1,   // top right
-        0.7f, -0.7f, 0.1, 0.8, 0.1,  // bottom right
-        -0.7f, -0.7f, 0.1, 0.8, 0.1, // bottom left
-    };
+    // (x, y, red, green, blue)
+    // GLfloat vertices[] = {
+    //     -0.7f,  0.7f, 0.1, 0.8, 0.1, // top left
+    //      0.7f,  0.7f, 0.1, 0.8, 0.1, // top right
+    //      0.7f, -0.7f, 0.1, 0.8, 0.1, // bottom right
+    //     -0.7f, -0.7f, 0.1, 0.8, 0.1  // bottom left
+    // };
+
+    int rows = 4;
+    int columns = 5;
+    int stride = rows * columns;
+    GLfloat vertices[stride * SHAPES_NUM];
+    for (int i = 0; i < SHAPES_NUM; i++)
+    {
+        int index = i * stride;
+        // set colors
+        for (int j = 0; j < 4; j++)
+        {
+            int colorIndex = index + columns * j + 2;
+            vertices[colorIndex + 0] = 0.1;
+            vertices[colorIndex + 1] = 0.8;
+            vertices[colorIndex + 2] = 0.1;
+        }
+
+        // set coordinates
+        double x1 = sampleRand();
+        double y1 = sampleRand();
+        double x2 = x1 + SHAPE_RADIUS;
+        double y2 = y1 + SHAPE_RADIUS;
+
+        vertices[index + 0] = x1;
+        vertices[index + 1] = y1;
+
+        index += columns;
+        vertices[index + 0] = x2;
+        vertices[index + 1] = y1;
+
+        index += columns;
+        vertices[index + 0] = x2;
+        vertices[index + 1] = y2;
+
+        index += columns;
+        vertices[index + 0] = x1;
+        vertices[index + 1] = y2;
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    GLuint elements[] = {
-        0, 1, 2, // the fist triangle
-        0, 3, 2  // the second triangle
-    };
+    // GLuint elements[] = {
+    //     0, 1, 2, // the fist triangle
+    //     0, 3, 2  // the second triangle
+    // };
+
+    GLuint elements[6 * SHAPES_NUM];
+    for (int i = 0; i < SHAPES_NUM; i++)
+    {
+        int index = 6 * i;
+        int vertex = 4 * i;
+        elements[index + 0] = vertex + 0;
+        elements[index + 1] = vertex + 1;
+        elements[index + 2] = vertex + 2;
+        elements[index + 3] = vertex + 0;
+        elements[index + 4] = vertex + 3;
+        elements[index + 5] = vertex + 2;
+    }
 
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -146,7 +209,7 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6 * SHAPES_NUM, GL_UNSIGNED_INT, 0);
     glutSwapBuffers();
 }
 
