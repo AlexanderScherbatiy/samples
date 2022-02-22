@@ -7,6 +7,13 @@
 
 #define INFO_LOG_SIZE 512
 
+GLuint vao;
+GLuint vbo;
+
+GLuint vertexShader;
+GLuint fragmentShader;
+GLuint shaderProgram;
+
 const GLchar *vertexSource =
     "    #version 330 core\n"
     "    in vec2 position;\n"
@@ -53,12 +60,10 @@ void checkLinkResult(GLuint program, GLuint status, const char *msg)
 void initShapes()
 {
     // Create Vertex Array Object
-    GLuint vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
     // Create a Vertex Buffer Object and copy the vertex data to it
-    GLuint vbo;
     glGenBuffers(1, &vbo);
 
     GLfloat vertices[] = {
@@ -70,19 +75,19 @@ void initShapes()
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // Create and compile the vertex shader
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
     glCompileShader(vertexShader);
     checkCompileResult(vertexShader, GL_COMPILE_STATUS, "vertex shader compilation failed");
 
     // Create and compile the fragment shader
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShader);
     checkCompileResult(fragmentShader, GL_COMPILE_STATUS, "fragment shader compilation failed");
 
     // Link the vertex and fragment shader into a shader program
-    GLuint shaderProgram = glCreateProgram();
+    shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
@@ -94,6 +99,22 @@ void initShapes()
     GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(posAttrib);
     glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+}
+
+void deleteShapes()
+{
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &vbo);
+
+    glDeleteProgram(shaderProgram);
+    glDeleteShader(fragmentShader);
+    glDeleteShader(vertexShader);
+}
+
+void exitApp()
+{
+    glutLeaveMainLoop();
+    deleteShapes();
 }
 
 void display(void)
@@ -118,8 +139,7 @@ void key(unsigned char key, int x, int y)
     switch (key)
     {
     case 27: // ESCAPE key
-        printf("Exit shapes sample.\n");
-        glutLeaveMainLoop();
+        exitApp();
         break;
     }
 }
@@ -149,6 +169,8 @@ int main(int argc, char *argv[])
     initShapes();
 
     glutMainLoop();
+
+    deleteShapes();
 
     return 0;
 }
