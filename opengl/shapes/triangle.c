@@ -17,17 +17,20 @@ GLuint shaderProgram;
 const GLchar *vertexSource =
     "    #version 330 core\n"
     "    in vec2 position;\n"
+    "    in vec3 color;\n"
+    "    out vec3 fragmentColor;\n"
     "    void main()\n"
     "    {\n"
+    "        fragmentColor = color;\n"
     "        gl_Position = vec4(position, 0.0, 1.0);\n"
     "    }\0";
 
 const GLchar *fragmentSource =
     "    #version 330 core\n"
-    "    uniform vec3 color;"
+    "    in vec3 fragmentColor;"
     "    void main()\n"
     "    {\n"
-    "        gl_FragColor = vec4(color, 1.0);\n"
+    "        gl_FragColor = vec4(fragmentColor, 1.0);\n"
     "    }\0";
 
 void checkCompileResult(GLuint shader, GLuint status, const char *msg)
@@ -68,9 +71,10 @@ void initShapes()
     glGenBuffers(1, &vbo);
 
     GLfloat vertices[] = {
-        0.0f, 0.7f,
-        0.7f, -0.7f,
-        -0.7f, -0.7f};
+        0.0f, 0.7f, 1.0, 0.0, 0.0,  // vertex 1 red
+        0.7f, -0.7f, 0.0, 1.0, 0.0, // vertex 2 green
+        -0.7f, -0.7f, 0.0, 0.0, 1.0 // vertex 3 blue
+    };
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -102,7 +106,13 @@ void initShapes()
     // Specify the layout of the vertex data
     GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), 0);
+
+    GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
+    glEnableVertexAttribArray(colAttrib);
+    glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), (void *)(2 * sizeof(float)));
 }
 
 void deleteShapes()
