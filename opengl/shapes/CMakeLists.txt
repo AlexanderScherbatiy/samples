@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(shapes)
-add_executable(shapes triangle.c)
+add_executable(shapes shapes.c)
 
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
