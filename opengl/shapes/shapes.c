@@ -72,10 +72,10 @@ void initShapes()
     glGenBuffers(1, &vbo);
 
     GLfloat vertices[] = {
-        -0.7f, 0.7f, 1.0, 0.0, 0.0, // top left
-        0.7f, 0.7f, 0.0, 1.0, 0.0,  // top right
-        0.7f, -0.7f, 1.0, 0.0, 0.0, // bottom right
-        -0.7f, -0.7f, 0.0, 0.0, 1.0, // bottom left
+        -0.7f, 0.7f, 0.1, 0.8, 0.1,  // top left
+        0.7f, 0.7f, 0.1, 0.8, 0.1,   // top right
+        0.7f, -0.7f, 0.1, 0.8, 0.1,  // bottom right
+        -0.7f, -0.7f, 0.1, 0.8, 0.1, // bottom left
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
