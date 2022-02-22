@@ -9,6 +9,7 @@
 
 GLuint vao;
 GLuint vbo;
+GLuint ebo;
 
 GLuint vertexShader;
 GLuint fragmentShader;
@@ -71,13 +72,24 @@ void initShapes()
     glGenBuffers(1, &vbo);
 
     GLfloat vertices[] = {
-        0.0f, 0.7f, 1.0, 0.0, 0.0,  // vertex 1 red
-        0.7f, -0.7f, 0.0, 1.0, 0.0, // vertex 2 green
-        -0.7f, -0.7f, 0.0, 0.0, 1.0 // vertex 3 blue
+        -0.7f, 0.7f, 1.0, 0.0, 0.0, // top left
+        0.7f, 0.7f, 0.0, 1.0, 0.0,  // top right
+        0.7f, -0.7f, 1.0, 0.0, 0.0, // bottom right
+        -0.7f, -0.7f, 0.0, 0.0, 1.0, // bottom left
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    GLuint elements[] = {
+        0, 1, 2, // the fist triangle
+        0, 3, 2  // the second triangle
+    };
+
+    glGenBuffers(1, &ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 sizeof(elements), elements, GL_STATIC_DRAW);
 
     // Create and compile the vertex shader
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -99,9 +111,6 @@ void initShapes()
     checkLinkResult(shaderProgram, GL_LINK_STATUS, "shader program link failed");
 
     glUseProgram(shaderProgram);
-
-    GLint uniColor = glGetUniformLocation(shaderProgram, "color");
-    glUniform3f(uniColor, 0.1f, 0.5f, 0.1f);
 
     // Specify the layout of the vertex data
     GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
@@ -133,14 +142,11 @@ void exitApp()
 
 void display(void)
 {
-
-    // Clear the screen to gray
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Draw a triangle from the 3 vertices
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glutSwapBuffers();
 }
 
