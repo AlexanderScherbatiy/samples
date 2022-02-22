@@ -7,10 +7,13 @@
 
 // https://open.gl/drawing
 
-#define SHAPES_NUM 10
+#define SHAPES_NUM 50
 #define WIN_WIDTH 480
 #define WIN_HEIGHT 800
 #define INFO_LOG_SIZE 512
+
+#define ANIMATION_ENABLED GL_TRUE
+#define ANIMATION_INTERVAL 16 // milliseconds per frame
 
 struct Bubble
 {
@@ -155,8 +158,8 @@ void initShapes()
         struct Bubble bubble;
         bubble.x = rangeRandom(0, WIN_WIDTH);
         bubble.y = rangeRandom(0, WIN_WIDTH);
-        bubble.r = 80;
-        bubble.velocity = rangeRandom(1.0, 5.0);
+        bubble.r = 50;
+        bubble.velocity = rangeRandom(2.0, 8.0);
         bubble.red = 0.1;
         bubble.green = 0.1;
         bubble.blue = 0.8;
@@ -262,8 +265,20 @@ void exitApp()
     deleteShapes();
 }
 
+void animation(int id)
+{
+    updateShapes();
+    glutPostRedisplay();
+}
+
 void display(void)
 {
+
+    if (ANIMATION_ENABLED)
+    {
+        glutTimerFunc(ANIMATION_INTERVAL, animation, 0);
+    }
+
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
