@@ -20,7 +20,7 @@ struct Bubble
     double x;
     double y;
     double r;
-    double velocity;
+    double speed;
     double red;
     double green;
     double blue;
@@ -43,11 +43,14 @@ const GLchar *vertexSource =
     "    #version 330 core\n"
     "    in vec2 position;\n"
     "    in vec3 color;\n"
+    "    uniform vec2 translate;\n"
+    "    uniform mat4 rotation;\n"
     "    out vec3 fragmentColor;\n"
     "    void main()\n"
     "    {\n"
     "        fragmentColor = color;\n"
-    "        gl_Position = vec4(position, 0.0, 1.0);\n"
+    "        vec2 nextPos = position + translate;\n"
+    "        gl_Position = rotation * vec4(nextPos, 0.0, 1.0);\n"
     "    }\0";
 
 const GLchar *fragmentSource =
@@ -99,12 +102,12 @@ void checkLinkResult(GLuint program, GLuint status, const char *msg)
 void initVertices()
 {
 
-    // (x, y, red, green, blue)
+    // [(x, y), (red, green, blue)]
     // GLfloat vertices[] = {
-    //     -0.7f,  0.7f, 0.1, 0.8, 0.1, // top left
-    //      0.7f,  0.7f, 0.1, 0.8, 0.1, // top right
-    //      0.7f, -0.7f, 0.1, 0.8, 0.1, // bottom right
-    //     -0.7f, -0.7f, 0.1, 0.8, 0.1  // bottom left
+    //     -0.7f,  0.7f, 0.1f, 0.8f, 0.1f, // top left
+    //      0.7f,  0.7f, 0.1f, 0.8f, 0.1f, // top right
+    //      0.7f, -0.7f, 0.1f, 0.8f, 0.1f, // bottom right
+    //     -0.7f, -0.7f, 0.1f, 0.8f, 0.1f  // bottom left
     // };
 
     int rows = 4;
@@ -126,7 +129,7 @@ void initVertices()
 
         // set coordinates
         double x1 = scaleToNDC(bubble.x, WIN_WIDTH);
-        double y1 = scaleToNDC(bubble.y, WIN_WIDTH);
+        double y1 = scaleToNDC(bubble.y, WIN_HEIGHT);
         double rx = bubble.r / WIN_WIDTH;
         double ry = bubble.r / WIN_HEIGHT;
         double x2 = x1 + rx;
@@ -159,7 +162,7 @@ void initShapes()
         bubble.x = rangeRandom(0, WIN_WIDTH);
         bubble.y = rangeRandom(0, WIN_WIDTH);
         bubble.r = 50;
-        bubble.velocity = rangeRandom(2.0, 8.0);
+        bubble.speed = rangeRandom(2.0, 8.0);
         bubble.red = 0.1;
         bubble.green = 0.1;
         bubble.blue = 0.8;
@@ -199,6 +202,19 @@ void initShapes()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  sizeof(elements), elements, GL_STREAM_DRAW);
 
+    // Translate(0, WIN_HEIGHT)
+    GLfloat translateVector[] = {
+        0.0f, scaleToNDC(WIN_HEIGHT, WIN_HEIGHT)};
+
+    // Rotate(90)
+    // (0 -1)
+    // (1  0)
+    GLfloat rotationMatrix[] = {
+        0.0f, -1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f};
+
     // Create and compile the vertex shader
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
@@ -230,13 +246,19 @@ void initShapes()
     glEnableVertexAttribArray(colAttrib);
     glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE,
                           5 * sizeof(float), (void *)(2 * sizeof(float)));
+
+    GLint translateAttrib = glGetUniformLocation(shaderProgram, "translate");
+    glUniform2fv(translateAttrib, 1, translateVector);
+
+    GLint rotateAttrib = glGetUniformLocation(shaderProgram, "rotation");
+    glUniformMatrix4fv(rotateAttrib, 1, GL_FALSE, rotationMatrix);
 }
 
 void updateShapes()
 {
     for (int i = 0; i < SHAPES_NUM; i++)
     {
-        bubbles[i].y -= bubbles[i].velocity;
+        bubbles[i].y -= bubbles[i].speed;
         if (bubbles[i].y < 0)
         {
             bubbles[i].y = WIN_WIDTH;
@@ -310,7 +332,8 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA);
-    glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
+    // The screen is rotated on 90 degree
+    glutInitWindowSize(WIN_HEIGHT, WIN_WIDTH);
 
     glutInitContextVersion(3, 3);
     glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
