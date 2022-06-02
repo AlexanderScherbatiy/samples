@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -x
 
 rm -rf ./bin
 mkdir -p bin/shared
@@ -16,7 +17,7 @@ gcc -shared bin/shared/load_lib1.o -Iinclude -o bin/shared/libload_lib1.so
 gcc -shared bin/shared/load_lib2.o -Iinclude -o bin/shared/libload_lib2.so
 
 gcc -c src/main.c  -Iinclude -o bin/main.o
-gcc bin/main.o -ldl -Lbin/shared -lload_lib2 -lload_lib1 -lload_lib   -o bin/main-dynamic
+gcc bin/main.o -Lbin/shared -lload_lib2 -lload_lib1 -lload_lib -ldl -o bin/main-dynamic
 
 #static
 
@@ -24,7 +25,7 @@ ar rcs bin/static/libload_lib.a bin/shared/load_lib.o
 ar rcs bin/static/libload_lib1.a bin/shared/load_lib1.o
 ar rcs bin/static/libload_lib2.a bin/shared/load_lib2.o
 
-gcc bin/main.o  -Lbin/static -lload_lib2 -lload_lib1 -lload_lib  -o bin/main-static
+gcc bin/main.o  -Lbin/static -lload_lib2 -lload_lib1 -lload_lib -ldl -o bin/main-static
 
 # run
 export LD_LIBRARY_PATH=./bin/shared

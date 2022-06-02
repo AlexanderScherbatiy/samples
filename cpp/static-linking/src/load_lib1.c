@@ -4,6 +4,6 @@
 #include "load_lib.h"
 
 void lib1_load() {
-    printf("call: lib1_load()\n");
+    printf("inside lib1: lib1_load()\n");
     sample_load();
 }

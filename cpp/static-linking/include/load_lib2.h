@@ -1,1 +1,1 @@
-void lib2_load();
+void lib2_load(const char* shared_lib_path);
